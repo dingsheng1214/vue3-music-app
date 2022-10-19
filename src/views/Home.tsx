@@ -1,15 +1,12 @@
 import { defineComponent } from 'vue'
-import { useUserStore } from '@/store'
-import style from './Home.module.scss'
+import Header from '@/components/header/Header'
 
 const Home = defineComponent({
   setup() {
-    const userStore = useUserStore()
     return () => (
-      <div class={style.wrapper}>
-        <div class={style.title}>Home</div>
-        username: {userStore.getUserInfo.username}
-      </div>
+      <>
+        <Header />
+      </>
     )
   },
 })

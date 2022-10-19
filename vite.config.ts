@@ -17,6 +17,17 @@ export default defineConfig({
       '#': resolve(__dirname, 'types'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // mixin和variable里面是函数和变量等供scss使用的非实体css, scss-loader需要
+        additionalData: `
+          @import "@/assets/scss/mixin.scss";
+          @import "@/assets/scss/variable.scss";
+        `,
+      },
+    },
+  },
   plugins: [
     vue(),
     vueJsx({
