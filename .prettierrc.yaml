@@ -1,0 +1,9 @@
+useTabs: false # 使用tabs 而不是 空格
+tabWidth: 2 # 缩进空格数
+printWidth: 100 # 换行长度
+singleQuote: true # 使用单引号
+trailingComma: 'all' # 尾随逗号
+bracketSpacing: true # { foo: bar} 对象与{}之间打印空格
+semi: false # 添加分号；
+vueIndentScriptAndStyle: true
+endOfLine: 'auto'
