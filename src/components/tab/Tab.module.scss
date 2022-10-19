@@ -1,0 +1,22 @@
+.tab {
+  display: flex;
+  height: 44px;
+  justify-content: center;
+  align-items: center;
+  font-size: $font-size-medium;
+  .tab-item {
+    flex: 1;
+    text-align: center;
+  }
+  .tab-link {
+    color: $color-text-l;
+    padding-bottom: 5px;
+  }
+  .tab-item-active {
+    & .tab-link {
+      color: $color-theme;
+      border-bottom: 2px solid $color-theme;
+    }
+  }
+}
+

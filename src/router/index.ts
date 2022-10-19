@@ -1,22 +1,33 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
+const Recommend = () => import('@/views/tabs/recommend')
+const Singer = () => import('@/views/tabs/Singer')
+const Rank = () => import('@/views/tabs/Rank')
+const Search = () => import('@/views/tabs/Search')
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/recommend',
   },
   {
-    path: '/home',
-    name: 'home',
-    meta: {
-      type: 'home',
-    },
-    component: () => import('@/views/Home'),
+    path: '/recommend',
+    name: 'recommend',
+    component: Recommend,
   },
   {
-    path: '/:pathMatch(.*)*', // 注意此处 404页面匹配规则和以前不相同，得采用这种配置方式才行
-    name: '404',
-    component: () => import('@/views/Page404'),
+    path: '/singer',
+    name: 'singer',
+    component: Singer,
+  },
+  {
+    path: '/rank',
+    name: 'rank',
+    component: Rank,
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: Search,
   },
 ]
 
