@@ -8,15 +8,17 @@ import style from './Recommend.module.scss'
 const Recommend = defineComponent({
   name: 'Recommend',
   setup() {
+    const loading = ref<boolean>(true)
     const sliderList = ref<Slide[]>([])
     const albumList = ref<Album[]>([])
     onMounted(async () => {
       const { sliders, albums } = await getRecommend()
+      loading.value = false
       sliderList.value = sliders
       albumList.value = albums
     })
     return () => (
-      <div class={style.recommend}>
+      <div class={style.recommend} v-loading={unref(loading)}>
         <Scroll class={style['recommend-content']}>
           {{
             default: () => (
@@ -27,7 +29,9 @@ const Recommend = defineComponent({
                   </div>
                 </div>
                 <div class={style['recommend-list']}>
-                  <h1 class={style['list-title']}>热门歌单推荐</h1>
+                  <h1 class={style['list-title']} v-show={!unref(loading)}>
+                    热门歌单推荐
+                  </h1>
                   {unref(albumList).map((album) => (
                     <div class={style.item}>
                       <div class={style.icon}>
