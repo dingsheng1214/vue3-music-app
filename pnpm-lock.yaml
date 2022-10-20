@@ -1,6 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@better-scroll/core': ^2.5.0
+  '@better-scroll/observe-dom': ^2.5.0
+  '@better-scroll/slide': ^2.5.0
   '@types/node': ^18.7.15
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': '>=5.31.0'
@@ -31,6 +34,9 @@ specifiers:
   xsrf: ^1.0.0
 
 dependencies:
+  '@better-scroll/core': 2.5.0
+  '@better-scroll/observe-dom': 2.5.0
+  '@better-scroll/slide': 2.5.0
   '@vitejs/plugin-vue': 3.1.0_vite@3.1.0+vue@3.2.38
   '@vitejs/plugin-vue-jsx': 2.0.1_vite@3.1.0+vue@3.2.38
   axios: 1.1.3
@@ -368,6 +374,28 @@ packages:
       '@babel/helper-string-parser': 7.18.10
       '@babel/helper-validator-identifier': 7.18.6
       to-fast-properties: 2.0.0
+
+  /@better-scroll/core/2.5.0:
+    resolution: {integrity: sha512-+3aKf8T3kUl4Gj1M7NKV3fNFhsrBpTWwHoDClkXVmQ8S3TxMMHf6Kyw6l1zKsg4r+9ukW5lDDkyif7/gY76qXQ==}
+    dependencies:
+      '@better-scroll/shared-utils': 2.5.0
+    dev: false
+
+  /@better-scroll/observe-dom/2.5.0:
+    resolution: {integrity: sha512-E7wZooGYN9BKcJ+/Tto+GnDN5KNoXlnnde/0Vs9MuQqvI73neFpIcHD3MvX99DaGCpV3cOQlmCw0dmL9q+jEow==}
+    dependencies:
+      '@better-scroll/core': 2.5.0
+    dev: false
+
+  /@better-scroll/shared-utils/2.5.0:
+    resolution: {integrity: sha512-5bfR/cwzIFtgWAU5E0CPKcOUvyd7KcgDZyAbOJQT6qqJeUBmTpG4Z8R7qO8uvqdZ0yIXxRPOu4te2Qt6ihGhkQ==}
+    dev: false
+
+  /@better-scroll/slide/2.5.0:
+    resolution: {integrity: sha512-p+rrQr8S3fXwu5I9vhi2aiRyHuprFDHxIiOADNLhECVVrkuvrh4/H1df3G2F8m+eSYW9m+d0W8WfEbZA1zeHIA==}
+    dependencies:
+      '@better-scroll/core': 2.5.0
+    dev: false
 
   /@esbuild/linux-loong64/0.15.7:
     resolution: {integrity: sha512-IKznSJOsVUuyt7cDzzSZyqBEcZe+7WlBqTVXiF1OXP/4Nm387ToaXZ0fyLwI1iBlI/bzpxVq411QE2/Bt2XWWw==}

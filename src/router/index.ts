@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
-const Recommend = () => import('@/views/tabs/recommend')
+const Recommend = () => import('@/views/tabs/Recommend')
 const Singer = () => import('@/views/tabs/Singer')
 const Rank = () => import('@/views/tabs/Rank')
 const Search = () => import('@/views/tabs/Search')

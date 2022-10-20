@@ -1,7 +1,7 @@
 const express = require('express')
 const compression = require('compression')
 const cookieParser = require('cookie-parser')
-const registerRouter = require('./router')
+const registerRouter = require('./router.cjs')
 
 const port = process.env.PORT || 9002
 
