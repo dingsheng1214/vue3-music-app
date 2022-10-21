@@ -7,7 +7,7 @@ BScroll.use(ObserveDOM)
 export default function useScroll(
   wrapperRef: Ref<HTMLElement | string>,
   options?: Record<string, any>,
-  emit?: any,
+  cb?: any,
 ) {
   const scroll = ref<BScroll>()
 
@@ -18,8 +18,8 @@ export default function useScroll(
     })
 
     if (options?.probeType > 0) {
-      scroll.value.on('scroll', (pos: any) => {
-        emit('scroll', pos)
+      scroll.value.on('scroll', (pos: {x : number, y: number}) => {
+        cb(pos)
       })
     }
   })

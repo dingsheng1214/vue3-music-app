@@ -8,11 +8,12 @@
  * 对于从第三方接口返回的数据，我们会做一层数据处理，最终提供给前端的数据前端可以直接使用，无需再处理。这样也比较符合真实企业项目的开发规范，即数据的处理放在后端做，前端只做数据渲染和交互。
  */
 const axios = require('axios')
-const pinyin = require('pinyin')
+const { pinyin } = require('pinyin')
 const { Base64 } = require('js-base64')
 // 获取签名方法
 const getSecuritySign = require('./sign.cjs')
 
+console.log('pinyin', pinyin)
 const ERR_OK = 0
 const token = 5381
 

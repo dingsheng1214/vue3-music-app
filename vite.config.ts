@@ -7,6 +7,7 @@ import { resolve } from 'path'
 export default defineConfig({
   base: './', // 设置打包路径
   server: {
+    host: true,
     port: 4000, // 设置服务启动端口号
     open: true, // 设置服务启动时是否自动打开浏览器
     cors: true, // 允许跨域
