@@ -78,7 +78,12 @@ const MusicList = defineComponent({
         <div ref={bgImageRef} class={style['bg-image']} style={unref(bgImageStyle)}>
           <div class={style.filter} style={unref(filterStyle)}></div>
         </div>
-        <Scroll class={style.list} style={unref(scrollStyle)} options={{ probeType: 3 }} onScroll={onScroll}>
+        <Scroll
+          class={style.list}
+          style={unref(scrollStyle)}
+          options={{ probeType: 3 }}
+          onScroll={onScroll}
+        >
           {{
             default: () => (
               <div class={style['song-list-wrapper']}>

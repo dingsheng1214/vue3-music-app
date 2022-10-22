@@ -191,7 +191,7 @@ const Singer = defineComponent({
                 // X.props = {singer: selectedSinger.value}
               }
                 return (
-                  <Transition>
+                  <Transition name="slide">
                     {X}
                   </Transition>
                 )
