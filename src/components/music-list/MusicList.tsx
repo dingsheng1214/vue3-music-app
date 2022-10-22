@@ -3,6 +3,7 @@ import { computed, defineComponent, onMounted, PropType, ref, unref } from 'vue'
 import Scroll from '../base/Scroll';
 import style from './MusicList.module.scss';
 import SongList from '@/components/song-list/SongList';
+import { usePlayerStore } from '@/store';
 const MusicList = defineComponent({
   name: 'MusicList',
   props: {
@@ -63,6 +64,13 @@ const MusicList = defineComponent({
         top: `${unref(bgImageHeight)}px`
       }
     })
+    const playBtnStyle = computed(() => {
+      let display = ''
+      if (unref(scrollY) >= unref(maxScrollY)) {
+        display = 'none'
+      }
+      return {display}
+    })
     onMounted(() => {
       bgImageHeight.value = unref(bgImageRef).clientHeight
       maxScrollY.value = unref(bgImageHeight) - 40
@@ -71,6 +79,14 @@ const MusicList = defineComponent({
       console.log('onScroll', pos);
       scrollY.value = -pos.y
     }
+
+    const { selectPlay, randomPlay } = usePlayerStore()
+    const onItemClick = ({ list, index }: {list: Song[], index: number}) => {
+      selectPlay(list, index)
+    }
+    const onRandomPlay = () => {
+      randomPlay(props.songs!)
+    }
     return () => (
       <div class={style['music-list']}>
         <div class={style.back}>
@@ -78,6 +94,14 @@ const MusicList = defineComponent({
         </div>
         <h1 class={style.title}>{props.title}</h1>
         <div ref={bgImageRef} class={style['bg-image']} style={unref(bgImageStyle)}>
+          {props.songs?.length! > 0 && (
+            <div class={style['play-btn-wrapper']} style={unref(playBtnStyle)} onClick={onRandomPlay}>
+              <div class={style['play-btn']}>
+                <i class="icon-play"></i>
+                <span class={style.text}>随机播放全部</span>
+              </div>
+            </div>
+          )}
           <div class={style.filter} style={unref(filterStyle)}></div>
         </div>
         <Scroll
@@ -89,7 +113,7 @@ const MusicList = defineComponent({
           {{
             default: () => (
               <div class={style['song-list-wrapper']}>
-                <SongList songs={props.songs} v-empty={props.songs?.length! <= 0} />
+                <SongList songs={props.songs} onItemClick={onItemClick} />
               </div>
             ),
           }}

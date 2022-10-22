@@ -9,12 +9,16 @@ const SongList = defineComponent({
       default: () => []
     }
   },
-  setup: (props, context) => {
+  emits:['itemClick'],
+  setup: (props, {emit}) => {
+    const onClick = (index: number) => {
+      emit('itemClick', {list: props.songs, index})
+    }
     return () => (
       <ul class={style['song-list']}>
         {
-          props.songs.map(song => (
-            <li class={style.item}>
+          props.songs.map((song, index) => (
+            <li class={style.item} onClick={() => onClick(index)}>
               <div class={style.content}>
                 <div class={style.name}>{song.name}</div>
                 <div class={style.desc}>{song.singer}·{song.album}</div>
@@ -22,7 +26,7 @@ const SongList = defineComponent({
             </li>
           ))
         }
-</ul>
+      </ul>
     )
   }
 })

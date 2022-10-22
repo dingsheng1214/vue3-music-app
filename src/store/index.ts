@@ -1,7 +1,7 @@
 import { createPinia } from 'pinia'
-import { useUserStore } from './modules/user'
+import { usePlayerStore } from './modules/player'
 
 const store = createPinia()
 
 export default store
-export { useUserStore }
+export { usePlayerStore }

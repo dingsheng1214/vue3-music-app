@@ -10,6 +10,8 @@ function remove(el: any) {
 
 const empty: Directive = {
   mounted(el, { value }) {
+    console.log('v-empty mounted');
+
     const app = createApp(Empty)
     const instance = app.mount(document.createElement('div'))
     el.instance = instance
@@ -19,9 +21,9 @@ const empty: Directive = {
     }
   },
   updated(el, { value, oldValue }) {
-    if (value !== oldValue) {
-      if (value) append(el)
-      else remove(el)
+    console.log('v-empty updated');
+    if(!value && oldValue) {
+      remove(el)
     }
   },
 }
