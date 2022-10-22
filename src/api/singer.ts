@@ -4,8 +4,8 @@ export function getSingerList() {
   return get('/api/getSingerList')
 }
 
-export function getAlbum(album: { id: any }) {
-  return get('/api/getAlbum', {
-    id: album.id,
+export function getSingerDetail(singer: { mid: string}) {
+  return get('/api/getSingerDetail', {
+    mid: singer.mid,
   })
 }

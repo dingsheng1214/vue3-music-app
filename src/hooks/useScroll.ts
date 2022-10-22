@@ -14,6 +14,7 @@ export default function useScroll(
   onMounted(() => {
     scroll.value = new BScroll(wrapperRef.value, {
       observeDOM: true,
+      click: true, // https://better-scroll.github.io/docs/zh-CN/FAQ/diagnosis.html 问题4
       ...options,
     })
 
