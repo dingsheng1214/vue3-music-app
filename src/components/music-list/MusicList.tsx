@@ -7,8 +7,7 @@ const MusicList = defineComponent({
   name: 'MusicList',
   props: {
     title: {
-      type: String as PropType<string>,
-      default: () => 'Title'
+      type: String as PropType<string>
     },
     pic: {
      type: String as PropType<string>

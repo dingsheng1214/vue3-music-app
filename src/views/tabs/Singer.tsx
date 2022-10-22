@@ -122,6 +122,7 @@ const Singer = defineComponent({
         path: `/singer/${singer.mid}`,
       })
       selectedSinger.value = singer
+      sessionStorage.setItem('__singer__', JSON.stringify(unref(selectedSinger)))
     }
 
     return () => (
@@ -188,12 +189,12 @@ const Singer = defineComponent({
                 // 给路由激活组件 传递props
                 X!.props!.singer = selectedSinger.value
                 // X.props = {singer: selectedSinger.value}
+              }
                 return (
                   <Transition>
                     {X}
                   </Transition>
                 )
-              }
             }
           }}
         </RouterView>
