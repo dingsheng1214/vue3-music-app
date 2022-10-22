@@ -87,7 +87,7 @@ const MusicList = defineComponent({
           {{
             default: () => (
               <div class={style['song-list-wrapper']}>
-                <SongList songs={props.songs}/>
+                <SongList songs={props.songs} v-empty={props.songs?.length! <= 0} />
               </div>
             ),
           }}
