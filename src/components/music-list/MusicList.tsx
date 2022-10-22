@@ -27,11 +27,13 @@ const MusicList = defineComponent({
       let height = '0px'
       let zIndex = 0
       let scale = 1
+      let translateZ = 0
       if(unref(scrollY) > unref(maxScrollY)) {
         // 上滑 歌曲列表顶部 触碰到title 底部，此时 提升title层级 就能盖住歌曲列表
         zIndex = 10 //
         height = '40px'
         paddingTop = '0px'
+        translateZ = 1
       }
 
       if(unref(scrollY) < 0) {
@@ -39,11 +41,11 @@ const MusicList = defineComponent({
         scale = 1 + Math.abs(unref(scrollY) / unref(bgImageHeight))
       }
       return {
-        scale,
         zIndex,
         height,
         paddingTop,
-        backgroundImage: `url(${props.pic})`
+        backgroundImage: `url(${props.pic})`,
+        transform: `scale(${scale})translateZ(${translateZ}px)`
       }
     })
     const filterStyle = computed(() => {
