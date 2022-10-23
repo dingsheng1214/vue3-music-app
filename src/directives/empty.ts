@@ -1,20 +1,21 @@
 import { Directive, createApp } from 'vue'
 import Empty from '@/components/base/Empty'
 
+const name = Empty.name
+
 function append(el: any) {
-  el.appendChild(el.instance.$el)
+  el.appendChild(el[name].$el)
 }
 function remove(el: any) {
-  el.removeChild(el.instance.$el)
+  el.removeChild(el[name].$el)
 }
 
 const empty: Directive = {
   mounted(el, { value }) {
-    console.log('v-empty mounted');
 
     const app = createApp(Empty)
     const instance = app.mount(document.createElement('div'))
-    el.instance = instance
+    el[name] = instance
     if (value) {
       // 加载中
       append(el)

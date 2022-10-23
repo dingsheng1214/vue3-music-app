@@ -26,6 +26,7 @@ const SingerDetail = defineComponent({
       return null
     })
     const loading = ref(true)
+    const empty = ref(false)
     onMounted(async () => {
       console.log('SingerDetail...', unref(computedSinger));
       if(!unref(computedSinger)) {
@@ -37,6 +38,9 @@ const SingerDetail = defineComponent({
         const res = await getSingerDetail({ mid: computedSinger.value.mid })
         songs.value = res.songs
         loading.value = false
+        if(res.songs.length <= 0) {
+          empty.value = true
+        }
       }
     })
     return () => (
@@ -46,6 +50,7 @@ const SingerDetail = defineComponent({
           pic={unref(computedSinger)?.pic}
           songs={unref(songs)}
           v-loading={unref(loading)}
+          v-empty={unref(empty)}
         />
       </div>
     )
