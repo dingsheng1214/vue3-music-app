@@ -1,4 +1,4 @@
-import { getSingerDetail } from '@/api/singer'
+import { getSingerDetail, processSongs } from '@/api/singer'
 import { computed, defineComponent, onMounted, PropType, ref, unref } from 'vue'
 import style from './SingerDetail.module.scss'
 import MusicList from '@/components/music-list/MusicList'
@@ -36,7 +36,7 @@ const SingerDetail = defineComponent({
       }
       if(computedSinger.value !== null) {
         const res = await getSingerDetail({ mid: computedSinger.value.mid })
-        songs.value = res.songs
+        songs.value = await processSongs(res.songs)
         loading.value = false
         if(res.songs.length <= 0) {
           empty.value = true

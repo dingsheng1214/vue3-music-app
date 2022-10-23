@@ -1,6 +1,7 @@
 import { defineComponent } from 'vue'
 import Header from '@/components/header/Header'
 import Tab from '@/components/tab/Tab'
+import Player from '@/components/player/Player';
 
 const App = defineComponent({
   setup() {
@@ -8,7 +9,8 @@ const App = defineComponent({
       <>
         <Header />
         <Tab />
-        <router-view />
+        <router-view></router-view>
+        <Player />
       </>
     )
   },

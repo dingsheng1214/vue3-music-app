@@ -13,7 +13,6 @@ const { Base64 } = require('js-base64')
 // 获取签名方法
 const getSecuritySign = require('./sign.cjs')
 
-console.log('pinyin', pinyin)
 const ERR_OK = 0
 const token = 5381
 
@@ -386,7 +385,7 @@ function registerSongsUrl(app) {
       const url = `https://u.y.qq.com/cgi-bin/musics.fcg?_=${getRandomVal()}&sign=${sign}`
 
       // 发送 post 请求
-      return post(url, data).then((response) => {
+      return post(url, JSON.stringify(data)).then((response) => {
         const { data } = response
         if (data.code === ERR_OK) {
           const midInfo = data.req_0.data.midurlinfo

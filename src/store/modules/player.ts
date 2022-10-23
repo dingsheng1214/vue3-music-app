@@ -44,7 +44,9 @@ export const usePlayerStore = defineStore({
     /**
      * 当前播放歌曲
      */
-    currentSong: (state) => state.playList[state.currentIndex]
+    currentSong: (state) => {
+      return state.playList[state.currentIndex] || {}
+    }
   },
   actions: {
     setPlayingState(playing: boolean) {
