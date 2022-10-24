@@ -1,27 +1,28 @@
-import { computed, defineComponent, PropType, ref, unref, watch } from 'vue'
+import { defineComponent, ref, unref, watch } from 'vue'
 import style from './Player.module.scss'
-import { usePlayerStore } from '@/store'
+import useAudio from './hooks/useAudio';
+import usePlayer from './hooks/usePlayer';
 const Player = defineComponent({
   name: 'Player',
   setup: (props, context) => {
     const audioRef= ref()
     const currentSongReady = ref(false)
-    const playerStore = usePlayerStore()
-    const fullScreen = computed(() => playerStore.fullScreen)
-    const currentSong = computed(() => playerStore.currentSong)
-    const currentIndex = computed(() => playerStore.currentIndex)
-    const playing = computed(() => playerStore.playing)
-    const playList = computed(() => playerStore.playList)
 
-    /**
-     * 样式相关
-     */
-    const playIcon = computed(() => {
-      return unref(playing) ? 'icon-pause' : 'icon-play'
-    })
-    const disabledClass = computed(() => {
-      return unref(currentSongReady) ? '' : style.disable
-    })
+    const { handleAudioPause, handleAudioCanPlay } = useAudio(currentSongReady)
+    const {
+      playing,
+      fullScreen,
+      currentSong,
+      playerStore,
+      handleNextSong,
+      handlePrevSong,
+      handleTogglePlay,
+      handleFullScreen,
+      handleChangeMode,
+      class_disabled,
+      class_playIcon,
+      class_modeIcon
+    }= usePlayer(currentSongReady)
 
     // 监听当前歌曲变化->自动播放
     watch(currentSong, async (val) => {
@@ -33,68 +34,14 @@ const Player = defineComponent({
       await audio.play()
       playerStore.setPlayingState(true)
     })
+    // 监听播放状态->控制audio
     watch(playing, (val) => {
       const audio = unref(audioRef) as HTMLAudioElement
       if(val) audio.play()
       else audio.pause()
     })
 
-    /**
-     * 最小化
-     */
-    const handleFullScreen = () => {
-      playerStore.setFullScreen(false)
-    }
-    /**
-     * 播放/暂停
-     */
-    const handleTogglePlay = () => {
-      if (!unref(currentSongReady)) return
-      playerStore.setPlayingState(!playerStore.playing)
-    }
-    /**
-     * 异常暂停
-     */
-    const handleAudioPause = () => {
-      playerStore.setPlayingState(false)
-    }
-    const handleAudioCanPlay = () => {
-      if(unref(currentSongReady)) return
-      currentSongReady.value = true
-    }
-    /**
-     * 下一首
-     */
-    const handleNextSong = () => {
-      if (!unref(currentSongReady)) return
-      if (!unref(playList).length) return
-      // 最后一首 跳到第一首
-      let nextIndex = 0
-      if(unref(currentIndex) < unref(playList).length - 1)  {
-        nextIndex = unref(currentIndex) + 1
-      }
-      playerStore.setCurrentIndex(nextIndex)
-      // unref(audioRef).play()
-    }
-    /**
-     * 上一首
-     */
-    const handlePrevSong = () => {
-      if (!unref(currentSongReady)) return
-      if (!unref(playList).length) return
-      // 第一首 跳到最后一首
-      let prevIndex = unref(playList).length - 1
-      if(unref(currentIndex) > 0) {
-        prevIndex = unref(currentIndex) - 1
-      }
-      playerStore.setCurrentIndex(prevIndex)
-    }
-    /**
-     * 循环
-     */
-    const handleLoop = () => {
 
-    }
     return () => (
       <div class={style.player}>
         {unref(fullScreen) && (
@@ -114,16 +61,16 @@ const Player = defineComponent({
               <div class={style.bottom}>
                 <div class={style.operators}>
                   <div class={[style.icon, style['i-left']]}>
-                    <i class="icon-sequence"/>
+                    <i class={unref(class_modeIcon)} onClick={handleChangeMode} />
                   </div>
-                  <div class={[style.icon, style['i-left'], unref(disabledClass)]}>
+                  <div class={[style.icon, style['i-left'], style[unref(class_disabled)]]}>
                     <i class="icon-prev" onClick={handlePrevSong} />
                   </div>
 
-                  <div class={[style.icon, style['i-center'], unref(disabledClass)]}>
-                    <i class={unref(playIcon)} onClick={handleTogglePlay} />
+                  <div class={[style.icon, style['i-center'], unref(class_disabled)]}>
+                    <i class={unref(class_playIcon)} onClick={handleTogglePlay} />
                   </div>
-                  <div class={[style.icon, style['i-right'], unref(disabledClass)]}>
+                  <div class={[style.icon, style['i-right'], unref(class_disabled)]}>
                     <i class="icon-next" onClick={handleNextSong} />
                   </div>
                   <div class={[style.icon, style['i-right']]}>

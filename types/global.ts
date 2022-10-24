@@ -37,3 +37,12 @@ export type Song = {
   duration: number
   album: string
 }
+
+/**
+ * 播放器模式
+ */
+export const enum PlayMode {
+  SEQUENCE = 0,
+  LOOP = 1,
+  RANDOM = 2
+}

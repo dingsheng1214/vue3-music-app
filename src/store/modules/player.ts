@@ -1,8 +1,7 @@
-import { Song } from '#/global'
+import { PlayMode, Song } from '#/global'
 import { defineStore } from 'pinia'
 import { shuffle } from '@/assets/js/util';
 
-type PlayMode = 0 | 1 | 2
 export interface PlayerState {
   /**
    * 歌曲列表
@@ -36,7 +35,7 @@ export const usePlayerStore = defineStore({
     sequenceList: [],
     playList: [],
     playing: false,
-    playMode: 0,
+    playMode: PlayMode.SEQUENCE,
     currentIndex: 0,
     fullScreen: false
   }),
@@ -76,7 +75,7 @@ export const usePlayerStore = defineStore({
 
 
     selectPlay(list: Song[], index: number) {
-      this.setPlayMode(0)
+      this.setPlayMode(PlayMode.SEQUENCE)
         .setSequenceList(list)
         .setPlayList(list)
         .setPlayingState(true)
@@ -84,12 +83,23 @@ export const usePlayerStore = defineStore({
         .setCurrentIndex(index)
     },
     randomPlay(list: Song[]) {
-      this.setPlayMode(2)
+      this.setPlayMode(PlayMode.RANDOM)
         .setSequenceList(list)
         .setPlayList(shuffle(list))
         .setPlayingState(true)
         .setFullScreen(true)
         .setCurrentIndex(0)
     },
+    changeMode(mode: PlayMode) {
+      let newPlayList = this.sequenceList
+      if(mode === PlayMode.RANDOM) {
+        newPlayList = shuffle(this.sequenceList)
+      }
+
+      const newCurrentIndex = newPlayList.findIndex(song => song.id === this.currentSong.id)
+      this.setPlayList(newPlayList)
+      this.setCurrentIndex(newCurrentIndex)
+      this.setPlayMode(mode)
+    }
   },
 })
