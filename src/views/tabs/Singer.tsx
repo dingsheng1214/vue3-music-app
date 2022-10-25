@@ -4,6 +4,8 @@ import Scroll from '@/components/base/Scroll'
 import { Singer as SingerType } from '#/global'
 import style from './Singer.module.scss'
 import { RouteLocationNormalizedLoaded, RouterView, useRouter } from 'vue-router'
+import storage from '@/assets/js/storage/session';
+import { SINGER_KEY } from '@/assets/js/constant';
 
 type Singers = { title: string; list: SingerType[] }[]
 function useFixed(singers: Ref<Singers>, singersRef: Ref) {
@@ -122,7 +124,7 @@ const Singer = defineComponent({
         path: `/singer/${singer.mid}`,
       })
       selectedSinger.value = singer
-      sessionStorage.setItem('__singer__', JSON.stringify(unref(selectedSinger)))
+      storage.set(SINGER_KEY, unref(selectedSinger))
     }
 
     return () => (

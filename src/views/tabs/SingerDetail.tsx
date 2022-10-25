@@ -4,7 +4,8 @@ import style from './SingerDetail.module.scss'
 import MusicList from '@/components/music-list/MusicList'
 import { Singer, Song } from '#/global'
 import { useRoute, useRouter } from 'vue-router'
-
+import storage from '@/assets/js/storage/session';
+import { SINGER_KEY } from '@/assets/js/constant';
 const SingerDetail = defineComponent({
   name: 'SingerDetail',
   props: {
@@ -19,7 +20,7 @@ const SingerDetail = defineComponent({
     const router = useRouter()
     const computedSinger = computed(() => {
       if(singer) return singer
-      const cachedSinger = JSON.parse(sessionStorage.getItem('__singer__')!) as Singer
+      const cachedSinger = storage.init(SINGER_KEY, {}) as Singer
       if(cachedSinger && route.params.mid === cachedSinger.mid) {
         return cachedSinger
       }

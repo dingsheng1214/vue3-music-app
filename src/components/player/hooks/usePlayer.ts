@@ -1,6 +1,6 @@
 import {usePlayerStore} from '@/store';
 import { computed, Ref, unref } from 'vue';
-import { PlayMode as PlayModeType } from '#/global';
+import { PlayMode, Song } from '#/global';
 
 function usePlayer(currentSongReady: Ref<boolean>) {
   const playerStore = usePlayerStore()
@@ -10,6 +10,7 @@ function usePlayer(currentSongReady: Ref<boolean>) {
   const fullScreen = computed(() => playerStore.fullScreen)
   const currentSong = computed(() => playerStore.currentSong)
   const playing = computed(() => playerStore.playing)
+  const favoriteList = computed(() => playerStore.favoriteList)
 
   /**
    * 最小化
@@ -59,24 +60,40 @@ function usePlayer(currentSongReady: Ref<boolean>) {
     playerStore.changeMode(mode)
   }
 
+  const handleTogglerFavorite = (currentSong: Song) => {
+    playerStore.toggleFavorite(currentSong)
+  }
+
   /**
-   * 样式相关
+   * 播放/暂停 按钮切换
    */
   const class_playIcon = computed(() => {
     return unref(playing) ? 'icon-pause' : 'icon-play'
   })
-  const class_disabled= computed(() => {
+  /**
+   * 播放/暂停/上一首/下一首/模式 按钮是否可用
+   */
+  const class_disabled = computed(() => {
     return unref(currentSongReady) ? '' : 'disable'
   })
-  const class_modeIcon= computed(() => {
+  /**
+   * 顺序/随机/循环 按钮切换
+   */
+  const class_modeIcon = computed(() => {
     const mode = unref(playMode)
-
-    return mode === PlayModeType.SEQUENCE
+    return mode === PlayMode.SEQUENCE
       ? 'icon-sequence'
-      : mode === PlayModeType.LOOP
+      : mode === PlayMode.LOOP
       ? 'icon-loop'
       : 'icon-random'
   })
+  /**
+   * 判断当前歌曲是否在收藏列表中
+   */
+  const class_favorite = (song: Song) => {
+    const isFavorite = unref(favoriteList).findIndex(item => item.id === song.id) > -1
+    return isFavorite ? 'icon-favorite' : 'icon-not-favorite'
+  }
 
   return {
     playerStore,
@@ -91,9 +108,11 @@ function usePlayer(currentSongReady: Ref<boolean>) {
     handleTogglePlay,
     handleChangeMode,
     handleFullScreen,
+    handleTogglerFavorite,
     class_disabled,
     class_modeIcon,
-    class_playIcon
+    class_playIcon,
+    class_favorite
   }
 }
 

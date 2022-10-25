@@ -1,6 +1,8 @@
 import { PlayMode, Song } from '#/global'
 import { defineStore } from 'pinia'
 import { shuffle } from '@/assets/js/util';
+import storage from '@/assets/js/storage/local';
+import { FAVORITE_KEY} from '@/assets/js/constant';
 
 export interface PlayerState {
   /**
@@ -26,19 +28,27 @@ export interface PlayerState {
   /**
    * 全屏
    */
-  fullScreen: boolean
+  fullScreen: boolean,
+  /**
+   * 收藏列表
+   */
+  favoriteList: Song[],
 }
 
 export const usePlayerStore = defineStore({
   id: 'app-player',
-  state: (): PlayerState => ({
-    sequenceList: [],
-    playList: [],
-    playing: false,
-    playMode: PlayMode.SEQUENCE,
-    currentIndex: 0,
-    fullScreen: false
-  }),
+  state: (): PlayerState => {
+
+    return {
+      sequenceList: [],
+      playList: [],
+      playing: false,
+      playMode: PlayMode.SEQUENCE,
+      currentIndex: 0,
+      fullScreen: false,
+      favoriteList: storage.init(FAVORITE_KEY, [])
+    }
+  },
   getters: {
     /**
      * 当前播放歌曲
@@ -72,6 +82,11 @@ export const usePlayerStore = defineStore({
       this.fullScreen = full
       return this
     },
+    setFavoriteSet(list: Song[]) {
+      storage.set(FAVORITE_KEY, list)
+      this.favoriteList = list
+      return this
+    },
 
 
     selectPlay(list: Song[], index: number) {
@@ -100,6 +115,18 @@ export const usePlayerStore = defineStore({
       this.setPlayList(newPlayList)
       this.setCurrentIndex(newCurrentIndex)
       this.setPlayMode(mode)
+    },
+    toggleFavorite(song: Song) {
+      const localStorage_favoriteList = this.favoriteList
+      const index = localStorage_favoriteList.findIndex(item => item.id === song.id)
+
+      if(index > -1) {
+        localStorage_favoriteList.splice(index, 1)
+      } else {
+        localStorage_favoriteList.push(song)
+      }
+
+      this.setFavoriteSet(localStorage_favoriteList)
     }
   },
 })

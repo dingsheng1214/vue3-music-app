@@ -19,9 +19,11 @@ const Player = defineComponent({
       handleTogglePlay,
       handleFullScreen,
       handleChangeMode,
+      handleTogglerFavorite,
       class_disabled,
       class_playIcon,
-      class_modeIcon
+      class_modeIcon,
+      class_favorite
     }= usePlayer(currentSongReady)
 
     // 监听当前歌曲变化->自动播放
@@ -73,8 +75,8 @@ const Player = defineComponent({
                   <div class={[style.icon, style['i-right'], unref(class_disabled)]}>
                     <i class="icon-next" onClick={handleNextSong} />
                   </div>
-                  <div class={[style.icon, style['i-right']]}>
-                    <i class="icon-not-favorite" />
+                  <div class={[style.icon, style['i-right'],]}>
+                    <i class={class_favorite(unref(currentSong))} onClick={() => handleTogglerFavorite(unref(currentSong))} />
                   </div>
                 </div>
               </div>
