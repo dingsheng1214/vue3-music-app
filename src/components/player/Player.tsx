@@ -1,30 +1,44 @@
 import { defineComponent, ref, unref, watch } from 'vue'
 import style from './Player.module.scss'
-import useAudio from './hooks/useAudio';
 import usePlayer from './hooks/usePlayer';
+import ProgressBar from './ProgressBar';
+import { formatTime } from '@/assets/js/util';
+import useProgressBar from './hooks/useProgressBar';
 const Player = defineComponent({
   name: 'Player',
   setup: (props, context) => {
-    const audioRef= ref()
+    const audioRef= ref<HTMLAudioElement>()
     const currentSongReady = ref(false)
+    const moving = ref(false)
 
-    const { handleAudioPause, handleAudioCanPlay } = useAudio(currentSongReady)
     const {
       playing,
       fullScreen,
       currentSong,
       playerStore,
+      currentTime,
       handleNextSong,
       handlePrevSong,
       handleTogglePlay,
       handleFullScreen,
       handleChangeMode,
       handleTogglerFavorite,
+      handleAudioPause,
+      handleAudioCanPlay,
+      handleAudioTimeUpdate,
+      handleAudioEnded,
       class_disabled,
       class_playIcon,
       class_modeIcon,
       class_favorite
-    }= usePlayer(currentSongReady)
+    } = usePlayer(audioRef, currentSongReady, moving)
+
+    const {
+      handleProgressBarMoveStart,
+      handleProgressBarMoving,
+      handleProgressBarMoveEnd,
+      handleProgressBarClick
+    } = useProgressBar(audioRef, moving, currentTime)
 
     // 监听当前歌曲变化->自动播放
     watch(currentSong, async (val) => {
@@ -38,10 +52,11 @@ const Player = defineComponent({
     })
     // 监听播放状态->控制audio
     watch(playing, (val) => {
-      const audio = unref(audioRef) as HTMLAudioElement
-      if(val) audio.play()
-      else audio.pause()
+      const audio = unref(audioRef)
+      if(val) audio!.play()
+      else audio!.pause()
     })
+
 
 
     return () => (
@@ -61,6 +76,19 @@ const Player = defineComponent({
               </div>
 
               <div class={style.bottom}>
+                <div class={style['progress-wrapper']}>
+                  <span class={[style.time, style['time-l']]}>{formatTime(unref(currentTime))}</span>
+                  <div class={style['progress-bar-wrapper']}>
+                    <ProgressBar
+                      onTouchStart={handleProgressBarMoveStart}
+                      onTouchMove={handleProgressBarMoving}
+                      onTouchEnd={handleProgressBarMoveEnd}
+                      onClick={handleProgressBarClick}
+                      progress={unref(currentTime) / unref(currentSong).duration}
+                    />
+                  </div>
+                  <span class={[style.time, style['time-r']]}>{formatTime(unref(currentSong).duration)}</span>
+                </div>
                 <div class={style.operators}>
                   <div class={[style.icon, style['i-left']]}>
                     <i class={unref(class_modeIcon)} onClick={handleChangeMode} />
@@ -87,6 +115,8 @@ const Player = defineComponent({
           ref={audioRef}
           onPause={handleAudioPause}
           onCanplay={handleAudioCanPlay}
+          onTimeupdate={handleAudioTimeUpdate}
+          onEnded={handleAudioEnded}
         />
       </div>
     )

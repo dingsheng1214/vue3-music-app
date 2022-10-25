@@ -1,8 +1,8 @@
 import {usePlayerStore} from '@/store';
-import { computed, Ref, unref } from 'vue';
+import { computed, ref, Ref, unref } from 'vue';
 import { PlayMode, Song } from '#/global';
 
-function usePlayer(currentSongReady: Ref<boolean>) {
+function usePlayer(audioRef: Ref<HTMLAudioElement | undefined>, currentSongReady: Ref<boolean>, moving: Ref<boolean>) {
   const playerStore = usePlayerStore()
   const playList = computed(() => playerStore.playList)
   const currentIndex = computed(() => playerStore.currentIndex)
@@ -11,6 +11,7 @@ function usePlayer(currentSongReady: Ref<boolean>) {
   const currentSong = computed(() => playerStore.currentSong)
   const playing = computed(() => playerStore.playing)
   const favoriteList = computed(() => playerStore.favoriteList)
+  const currentTime = ref(0)
 
   /**
    * 最小化
@@ -53,7 +54,10 @@ function usePlayer(currentSongReady: Ref<boolean>) {
     playerStore.setCurrentIndex(prevIndex)
   }
   /**
-   * 播放模式切换
+   * 播放模式切换, 其实是切换的playList
+   * loop: playList不变
+   * sequence: playList -> sequenceList
+   * random: playList -> 打乱后的sequenceList
    */
   const handleChangeMode = () => {
     const mode = (unref(playMode) + 1) % 3
@@ -63,6 +67,47 @@ function usePlayer(currentSongReady: Ref<boolean>) {
   const handleTogglerFavorite = (currentSong: Song) => {
     playerStore.toggleFavorite(currentSong)
   }
+
+  /**
+   * Audio暂停事件
+   */
+  const handleAudioPause = () => {
+    playerStore.setPlayingState(false)
+  }
+
+  /**
+   * Audio canplay 事件
+   * @param currentSongReady
+   * @returns
+   */
+  const handleAudioCanPlay = () => {
+    if (unref(currentSongReady)) return
+    currentSongReady.value = true
+  }
+
+  const handleAudioTimeUpdate = (event: any) => {
+    if(!unref(moving)) {
+      currentTime.value = event.target.currentTime
+    }
+  }
+
+  const handleAudioEnded = (event: any) => {
+    // 当前歌曲结束后根据播放模式播放下一首
+    const playMode = playerStore.playMode
+    if(playMode === PlayMode.LOOP) {
+      _loop()
+    }else {
+      handleNextSong()
+    }
+  }
+
+  function _loop() {
+      const audioEl = audioRef.value
+      audioEl!.currentTime = 0
+      audioEl!.play()
+      playerStore.setPlayingState(true)
+  }
+
 
   /**
    * 播放/暂停 按钮切换
@@ -103,12 +148,17 @@ function usePlayer(currentSongReady: Ref<boolean>) {
     fullScreen,
     currentIndex,
     currentSong,
+    currentTime,
     handleNextSong,
     handlePrevSong,
     handleTogglePlay,
     handleChangeMode,
     handleFullScreen,
     handleTogglerFavorite,
+    handleAudioCanPlay,
+    handleAudioPause,
+    handleAudioTimeUpdate,
+    handleAudioEnded,
     class_disabled,
     class_modeIcon,
     class_playIcon,
