@@ -1,16 +1,16 @@
-import { defineComponent, ref, unref, watch } from 'vue'
+import { defineComponent, Ref, ref, unref, watch } from 'vue'
 import style from './Player.module.scss'
 import usePlayer from './hooks/usePlayer';
+import useProgressBar from './hooks/useProgressBar';
+import useCD from './hooks/useCD';
 import ProgressBar from './ProgressBar';
 import { formatTime } from '@/assets/js/util';
-import useProgressBar from './hooks/useProgressBar';
 const Player = defineComponent({
   name: 'Player',
   setup: (props, context) => {
     const audioRef= ref<HTMLAudioElement>()
     const currentSongReady = ref(false)
     const moving = ref(false)
-
     const {
       playing,
       fullScreen,
@@ -40,6 +40,12 @@ const Player = defineComponent({
       handleProgressBarClick
     } = useProgressBar(audioRef, moving, currentTime)
 
+    const {
+      cdImageRef,
+      cdWrapperRef,
+      calcCdWrapperTransform
+    } = useCD()
+
     // 监听当前歌曲变化->自动播放
     watch(currentSong, async (val) => {
       currentSongReady.value = false
@@ -54,9 +60,11 @@ const Player = defineComponent({
     watch(playing, (val) => {
       const audio = unref(audioRef)
       if(val) audio!.play()
-      else audio!.pause()
+      else {
+        audio!.pause()
+        calcCdWrapperTransform(cdWrapperRef, cdImageRef)
+      }
     })
-
 
 
     return () => (
@@ -67,12 +75,23 @@ const Player = defineComponent({
               <div class={style.background}>
                 <img src={unref(currentSong).pic} />
               </div>
+
               <div class={style.top}>
                 <div class={style.back} onClick={handleFullScreen}>
                   <i class={['icon-back', style['player-icon-back']].join(' ')} />
                 </div>
                 <h1 class={style.title}>{unref(currentSong).name}</h1>
                 <h2 class={style.subtitle}>{unref(currentSong).singer}</h2>
+              </div>
+
+              <div class={style.middle}>
+                <div class={style['middle-l']}>
+                  <div class={style['cd-wrapper']} ref={cdWrapperRef}>
+                    <div class={style.cd}>
+                      <img ref={cdImageRef} src={unref(currentSong).pic} class={[unref(playing) ? style.playing : '']} />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class={style.bottom}>
@@ -100,6 +119,7 @@ const Player = defineComponent({
                   <div class={[style.icon, style['i-center'], unref(class_disabled)]}>
                     <i class={unref(class_playIcon)} onClick={handleTogglePlay} />
                   </div>
+
                   <div class={[style.icon, style['i-right'], unref(class_disabled)]}>
                     <i class="icon-next" onClick={handleNextSong} />
                   </div>
