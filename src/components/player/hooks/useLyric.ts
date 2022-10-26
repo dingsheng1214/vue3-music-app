@@ -1,4 +1,3 @@
-import { lyric } from 'lyric-parser';
 import { watch, computed, unref, ref, Ref } from 'vue';
 import { usePlayerStore } from '@/store';
 import { getLyric } from '@/api/singer';
@@ -70,16 +69,16 @@ function useLyric(currentTime: Ref<number>) {
     const offsetIndex = lines.findIndex(line => line === '[offset:0]')
     lines = lines.slice(offsetIndex + 1)
 
-    const result = lines.map((line, index) => {
-      const temp: LyricLine = {
-        line: index + 1,
-        time: time_to_sec(line.slice(1,9)),
-        txt: line.slice(10)
-      }
-      return temp
+    lines = lines.filter(item => item.slice(10) !== '')
+
+    const res = lines.map((item, index) => {
+      const line = index + 1
+      const time = time_to_sec(item.slice(1,9))
+      const txt = item.slice(10)
+      return {line, time, txt}
     })
-    console.log(result);
-    return result
+    console.log(res);
+    return res
   }
   return {
     currentLine,

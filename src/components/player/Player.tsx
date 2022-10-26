@@ -1,6 +1,6 @@
 import { defineComponent, onMounted, Ref, ref, unref, watch } from 'vue'
 import style from './Player.module.scss'
-import { useCD, useLyric, usePlayer, useProgressBar} from './hooks';
+import { useCD, useLyric, useMiddleAnimation, usePlayer, useProgressBar} from './hooks';
 import ProgressBar from './ProgressBar';
 import { formatTime } from '@/assets/js/util';
 import Scroll from '../base/Scroll';
@@ -52,6 +52,15 @@ const Player = defineComponent({
       lyricScrollRef,
     } = useLyric(currentTime)
 
+    const {
+      currentShow,
+      middleLStyle,
+      middleRStyle,
+      onMiddleTouchStart,
+      onMiddleTouchMove,
+      onMiddleTouchEnd
+    } = useMiddleAnimation()
+
     // 监听当前歌曲变化->自动播放
     watch(currentSong, async (val) => {
       currentSongReady.value = false
@@ -93,9 +102,17 @@ const Player = defineComponent({
               </div>
 
               {/* 中部: cd旋转图片+歌词 */}
-              <div class={style.middle}>
+              <div
+                class={style.middle}
+                onTouchstart={onMiddleTouchStart}
+                onTouchmove={onMiddleTouchMove}
+                onTouchend={onMiddleTouchEnd}
+              >
                 {/* cd旋转图片 */}
-                <div class={style['middle-l']} style={{display: 'none'}}>
+                <div
+                  class={style['middle-l']}
+                  style={unref(middleLStyle)}
+                >
                   <div class={style['cd-wrapper']} ref={cdWrapperRef}>
                     <div class={style.cd}>
                       <img
@@ -107,13 +124,17 @@ const Player = defineComponent({
                   </div>
                 </div>
                 {/* 歌词 */}
-                <Scroll class={style['middle-r']} ref={lyricScrollRef}>
+                <Scroll
+                  ref={lyricScrollRef}
+                  class={style['middle-r']}
+                  style={unref(middleRStyle)}
+                >
                   <div class={style['lyric-wrapper']}>
                     {unref(currentLyric) && (
                       <div ref={lyricListRef}>
                         {
                           unref(currentLyric).map((line) => (
-                            <p class={[style.text, line.line === unref(currentLine)? style.current : ''].join(' ')}>{line.txt}</p>
+                            <p class={[style.text, line.line === unref(currentLine)? style.current : ''].join(' ')}>{line.txt || ' '}</p>
                           ))
                         }
                       </div>
@@ -124,6 +145,10 @@ const Player = defineComponent({
 
               {/* 底部: 进度条+操作按钮组 */}
               <div class={style.bottom}>
+                <div class={style['dot-wrapper']}>
+                  <span class={[style.dot, unref(currentShow) === 'cd' ? style.active : '']} />
+                  <span class={[style.dot, unref(currentShow) === 'lyric' ? style.active : '']} />
+                </div>
                 {/* 进度条 */}
                 <div class={style['progress-wrapper']}>
                   <span class={[style.time, style['time-l']]}>
