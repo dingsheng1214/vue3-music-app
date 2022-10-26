@@ -28,3 +28,15 @@ export function formatTime(interval: number) {
   const second = (interval % 60 + '').padStart(2, '0')
   return `${minute}:${second}`
 }
+
+
+export function time_to_sec(s: string) {
+  let ss = s.split(":");
+  const minute = Math.floor(Number(ss[0])) * 60
+  const seconds = Number(ss[1])
+  return minute + seconds
+}
+
+
+const a = '00:22:71'
+console.log(time_to_sec(a));

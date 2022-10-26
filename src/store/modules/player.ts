@@ -127,6 +127,13 @@ export const usePlayerStore = defineStore({
       }
 
       this.setFavoriteSet(localStorage_favoriteList)
+    },
+    setSongLyric(song: Song, lyric: string) {
+      this.sequenceList.map(item => {
+        if(item.id === song.id) {
+          item.lyric = lyric
+        }
+      })
     }
   },
 })

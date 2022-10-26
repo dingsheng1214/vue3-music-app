@@ -35,7 +35,8 @@ export type Song = {
   singer: string
   url: string
   duration: number
-  album: string
+  album: string,
+  lyric?: string
 }
 
 /**

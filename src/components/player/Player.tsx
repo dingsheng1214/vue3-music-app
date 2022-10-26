@@ -1,10 +1,9 @@
-import { defineComponent, Ref, ref, unref, watch } from 'vue'
+import { defineComponent, onMounted, Ref, ref, unref, watch } from 'vue'
 import style from './Player.module.scss'
-import usePlayer from './hooks/usePlayer';
-import useProgressBar from './hooks/useProgressBar';
-import useCD from './hooks/useCD';
+import { useCD, useLyric, usePlayer, useProgressBar} from './hooks';
 import ProgressBar from './ProgressBar';
 import { formatTime } from '@/assets/js/util';
+import Scroll from '../base/Scroll';
 const Player = defineComponent({
   name: 'Player',
   setup: (props, context) => {
@@ -46,6 +45,13 @@ const Player = defineComponent({
       calcCdWrapperTransform
     } = useCD()
 
+    const {
+      currentLyric,
+      currentLine,
+      lyricListRef,
+      lyricScrollRef,
+    } = useLyric(currentTime)
+
     // 监听当前歌曲变化->自动播放
     watch(currentSong, async (val) => {
       currentSongReady.value = false
@@ -72,10 +78,12 @@ const Player = defineComponent({
         {unref(fullScreen) && (
           <>
             <div class={style['normal-player']}>
+              {/* 最小化按钮 */}
               <div class={style.background}>
                 <img src={unref(currentSong).pic} />
               </div>
 
+              {/* 顶部: 歌词+歌手 */}
               <div class={style.top}>
                 <div class={style.back} onClick={handleFullScreen}>
                   <i class={['icon-back', style['player-icon-back']].join(' ')} />
@@ -84,19 +92,43 @@ const Player = defineComponent({
                 <h2 class={style.subtitle}>{unref(currentSong).singer}</h2>
               </div>
 
+              {/* 中部: cd旋转图片+歌词 */}
               <div class={style.middle}>
-                <div class={style['middle-l']}>
+                {/* cd旋转图片 */}
+                <div class={style['middle-l']} style={{display: 'none'}}>
                   <div class={style['cd-wrapper']} ref={cdWrapperRef}>
                     <div class={style.cd}>
-                      <img ref={cdImageRef} src={unref(currentSong).pic} class={[unref(playing) ? style.playing : '']} />
+                      <img
+                        ref={cdImageRef}
+                        src={unref(currentSong).pic}
+                        class={[unref(playing) ? style.playing : '']}
+                      />
                     </div>
                   </div>
                 </div>
+                {/* 歌词 */}
+                <Scroll class={style['middle-r']} ref={lyricScrollRef}>
+                  <div class={style['lyric-wrapper']}>
+                    {unref(currentLyric) && (
+                      <div ref={lyricListRef}>
+                        {
+                          unref(currentLyric).map((line) => (
+                            <p class={[style.text, line.line === unref(currentLine)? style.current : ''].join(' ')}>{line.txt}</p>
+                          ))
+                        }
+                      </div>
+                    )}
+                  </div>
+                </Scroll>
               </div>
 
+              {/* 底部: 进度条+操作按钮组 */}
               <div class={style.bottom}>
+                {/* 进度条 */}
                 <div class={style['progress-wrapper']}>
-                  <span class={[style.time, style['time-l']]}>{formatTime(unref(currentTime))}</span>
+                  <span class={[style.time, style['time-l']]}>
+                    {formatTime(unref(currentTime))}
+                  </span>
                   <div class={style['progress-bar-wrapper']}>
                     <ProgressBar
                       onTouchStart={handleProgressBarMoveStart}
@@ -106,8 +138,11 @@ const Player = defineComponent({
                       progress={unref(currentTime) / unref(currentSong).duration}
                     />
                   </div>
-                  <span class={[style.time, style['time-r']]}>{formatTime(unref(currentSong).duration)}</span>
+                  <span class={[style.time, style['time-r']]}>
+                    {formatTime(unref(currentSong).duration)}
+                  </span>
                 </div>
+                {/* 操作按钮组 */}
                 <div class={style.operators}>
                   <div class={[style.icon, style['i-left']]}>
                     <i class={unref(class_modeIcon)} onClick={handleChangeMode} />
@@ -123,8 +158,11 @@ const Player = defineComponent({
                   <div class={[style.icon, style['i-right'], unref(class_disabled)]}>
                     <i class="icon-next" onClick={handleNextSong} />
                   </div>
-                  <div class={[style.icon, style['i-right'],]}>
-                    <i class={class_favorite(unref(currentSong))} onClick={() => handleTogglerFavorite(unref(currentSong))} />
+                  <div class={[style.icon, style['i-right']]}>
+                    <i
+                      class={class_favorite(unref(currentSong))}
+                      onClick={() => handleTogglerFavorite(unref(currentSong))}
+                    />
                   </div>
                 </div>
               </div>
