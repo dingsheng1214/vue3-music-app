@@ -16,6 +16,7 @@ const PlayList = defineComponent({
     const listRef = ref()
     const playerStore = usePlayerStore()
     const sequenceList = computed(() => playerStore.sequenceList)
+    const playList = computed(() => playerStore.playList)
     const favoriteList = computed(() => playerStore.favoriteList)
     const playMode = computed(() => playerStore.playMode)
     const currentSong = computed(() => playerStore.currentSong)
@@ -58,6 +59,9 @@ const PlayList = defineComponent({
     const deleteSong = (e: MouseEvent,song: Song) => {
       e.stopPropagation()
       playerStore.removeSong(song)
+      if (!playList.value.length) {
+        emit('close')
+      }
     }
     const scrollToCurrentSong = () => {
       const index = unref(sequenceList).findIndex(item => item.id === unref(currentSong).id)
