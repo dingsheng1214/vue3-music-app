@@ -30,6 +30,17 @@ body, html {
   height: 0 !important;
 }
 
+// MiniPlayer.tsx <Transition name="mini"></Transition>
+.mini-enter-active, .mini-leave-active {
+  transition: all 0.6s cubic-bezier(0.45, 0, 0.55, 1);
+}
+.mini-enter-from, .mini-leave-to {
+  opacity: 0;
+  transform: translate3d(0, 100%, 0)
+}
+
+
+
 @keyframes rotate {
   0% {
     transform: rotate(0)

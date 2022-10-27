@@ -5,12 +5,14 @@ import { onMounted, onUnmounted, onActivated, onDeactivated, ref, Ref } from 'vu
 
 BScroll.use(Slide)
 
-export default function useSlider(wrapperRef: Ref<HTMLElement | string>) {
+export default function useSlider() {
+
+  const slideWrapperRef = ref<HTMLElement | string>()
   const slider = ref<BScroll>()
   const currentPageIndex = ref(0)
 
   onMounted(() => {
-    slider.value = new BScroll(wrapperRef.value, {
+    slider.value = new BScroll(slideWrapperRef.value!, {
       click: true,
       scrollX: true,
       scrollY: false,
@@ -41,5 +43,6 @@ export default function useSlider(wrapperRef: Ref<HTMLElement | string>) {
   return {
     slider,
     currentPageIndex,
+    slideWrapperRef
   }
 }

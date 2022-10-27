@@ -16,10 +16,9 @@ const Slider = defineComponent({
   },
   name: 'Slider',
   setup(props) {
-    const rootRef = ref()
-    const { currentPageIndex } = useSlider(rootRef)
+    const { currentPageIndex, slideWrapperRef } = useSlider()
     return () => (
-      <div class={style.slider} ref={rootRef}>
+      <div class={style.slider} ref={slideWrapperRef}>
         <div class={style['slider-group']}>
           {props.sliders.map((item) => (
             <div class={style['slider-page']}>

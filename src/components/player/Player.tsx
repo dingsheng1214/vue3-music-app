@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, Ref, ref, unref, watch } from 'vue'
+import { defineComponent, onMounted, Ref, ref, Transition, unref, watch } from 'vue'
 import style from './Player.module.scss'
 import { useCD, useLyric, useMiddleAnimation, usePlayer, useProgressBar} from './hooks';
 import ProgressBar from './ProgressBar';
@@ -77,7 +77,14 @@ const Player = defineComponent({
       if(val) audio!.play()
       else {
         audio!.pause()
-        calcCdWrapperTransform(cdWrapperRef, cdImageRef)
+        if(unref(fullScreen)) {
+          calcCdWrapperTransform(cdWrapperRef, cdImageRef)
+        }
+      }
+    })
+
+    watch(fullScreen, (val) => {
+      if(val && unref(audioRef)) {
       }
     })
 
@@ -85,7 +92,7 @@ const Player = defineComponent({
     return () => (
       <div class={style.player}>
         {unref(fullScreen) && (
-          <>
+          <Transition name="normal">
             <div class={style['normal-player']}>
               {/* 最小化按钮 */}
               <div class={style.background}>
@@ -109,10 +116,7 @@ const Player = defineComponent({
                 onTouchend={onMiddleTouchEnd}
               >
                 {/* cd旋转图片 */}
-                <div
-                  class={style['middle-l']}
-                  style={unref(middleLStyle)}
-                >
+                <div class={style['middle-l']} style={unref(middleLStyle)}>
                   <div class={style['cd-wrapper']} ref={cdWrapperRef}>
                     <div class={style.cd}>
                       <img
@@ -124,19 +128,20 @@ const Player = defineComponent({
                   </div>
                 </div>
                 {/* 歌词 */}
-                <Scroll
-                  ref={lyricScrollRef}
-                  class={style['middle-r']}
-                  style={unref(middleRStyle)}
-                >
+                <Scroll ref={lyricScrollRef} class={style['middle-r']} style={unref(middleRStyle)}>
                   <div class={style['lyric-wrapper']}>
                     {unref(currentLyric) && (
                       <div ref={lyricListRef}>
-                        {
-                          unref(currentLyric).map((line) => (
-                            <p class={[style.text, line.line === unref(currentLine)? style.current : ''].join(' ')}>{line.txt || ' '}</p>
-                          ))
-                        }
+                        {unref(currentLyric).map((line) => (
+                          <p
+                            class={[
+                              style.text,
+                              line.line === unref(currentLine) ? style.current : '',
+                            ].join(' ')}
+                          >
+                            {line.txt || ' '}
+                          </p>
+                        ))}
                       </div>
                     )}
                   </div>
@@ -155,13 +160,15 @@ const Player = defineComponent({
                     {formatTime(unref(currentTime))}
                   </span>
                   <div class={style['progress-bar-wrapper']}>
-                    <ProgressBar
-                      onTouchStart={handleProgressBarMoveStart}
-                      onTouchMove={handleProgressBarMoving}
-                      onTouchEnd={handleProgressBarMoveEnd}
-                      onClick={handleProgressBarClick}
-                      progress={unref(currentTime) / unref(currentSong).duration}
-                    />
+                    {unref(fullScreen) && (
+                      <ProgressBar
+                        onTouchStart={handleProgressBarMoveStart}
+                        onTouchMove={handleProgressBarMoving}
+                        onTouchEnd={handleProgressBarMoveEnd}
+                        onClick={handleProgressBarClick}
+                        progress={unref(currentTime) / unref(currentSong).duration}
+                      />
+                    )}
                   </div>
                   <span class={[style.time, style['time-r']]}>
                     {formatTime(unref(currentSong).duration)}
@@ -192,7 +199,7 @@ const Player = defineComponent({
                 </div>
               </div>
             </div>
-          </>
+          </Transition>
         )}
         <audio
           ref={audioRef}

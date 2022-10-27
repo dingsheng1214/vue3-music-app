@@ -1,0 +1,68 @@
+.mini-player {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  height: 60px;
+  width: 100%;
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-highlight-background;
+  .cd-wrapper {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    padding: 0 10px 0 10px;
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .playing :global {
+      // rotate在base.scss中定义
+      animation: rotate 20s linear infinite
+    }
+  }
+  .slide-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    height: 40px;
+    overflow: hidden;
+    .slide-content {
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      .slide-page {
+        display: inline-block;
+        width: 100%;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        .name {
+          color: $color-text;
+          font-size: $font-size-medium;
+          @include no-wrap()
+        }
+        .singer {
+          color: $color-text-l;
+          font-size: $font-size-small;
+          @include no-wrap()
+        }
+      }
+    }
+  }
+  .control {
+    flex-basis: 30px;
+    width: 30px;
+    height: 100%;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon-mini {
+      color: $color-theme-d;
+      font-size: 30px;
+    }
+  }
+}
