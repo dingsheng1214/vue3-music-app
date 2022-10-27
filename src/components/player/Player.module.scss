@@ -240,23 +240,21 @@
       }
     }
 
-    :global {
-      .normal-enter-active, .normal-leave-active {
-        transition: all .6s;
-        :local(.top), :local(.bottom) {
-          transition: all .6s cubic-bezier(0.45, 0, 0.55, 1);
-        }
-      }
-      .normal-enter-from, .normal-leave-to {
-        opacity: 0;
-        :local(.top) {
-          transform: translate3d(0, -100px, 0);
-        }
-        :local(.bottom) {
-          transform: translate3d(0, 100px, 0)
-        }
+    &.normal-enter-active, &.normal-leave-active {
+      transition: all .6s;
+      .top, .bottom {
+        transition: all .6s cubic-bezier(0.45, 0, 0.55, 1);
       }
     }
-
+    &.normal-enter-from, &.normal-leave-to {
+      opacity: 0;
+      .top {
+        transform: translate3d(0, -100px, 0);
+      }
+      .bottom {
+        transform: translate3d(0, 100px, 0)
+      }
+    }
   }
 }
+

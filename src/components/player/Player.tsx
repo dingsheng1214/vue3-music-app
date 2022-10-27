@@ -1,13 +1,13 @@
-import { defineComponent, onMounted, Ref, ref, Transition, unref, watch } from 'vue'
+import { defineComponent, ref, Transition, unref, watch } from 'vue'
 import style from './Player.module.scss'
-import { useCD, useLyric, useMiddleAnimation, usePlayer, useProgressBar} from './hooks';
-import ProgressBar from './ProgressBar';
-import { formatTime } from '@/assets/js/util';
-import Scroll from '../base/Scroll';
+import { useCD, useLyric, useMiddleAnimation, usePlayer, useProgressBar } from './hooks'
+import ProgressBar from './ProgressBar'
+import { formatTime } from '@/assets/js/util'
+import Scroll from '../base/Scroll'
 const Player = defineComponent({
   name: 'Player',
   setup: (props, context) => {
-    const audioRef= ref<HTMLAudioElement>()
+    const audioRef = ref<HTMLAudioElement>()
     const currentSongReady = ref(false)
     const moving = ref(false)
     const {
@@ -29,28 +29,19 @@ const Player = defineComponent({
       class_disabled,
       class_playIcon,
       class_modeIcon,
-      class_favorite
+      class_favorite,
     } = usePlayer(audioRef, currentSongReady, moving)
 
     const {
       handleProgressBarMoveStart,
       handleProgressBarMoving,
       handleProgressBarMoveEnd,
-      handleProgressBarClick
+      handleProgressBarClick,
     } = useProgressBar(audioRef, moving, currentTime)
 
-    const {
-      cdImageRef,
-      cdWrapperRef,
-      calcCdWrapperTransform
-    } = useCD()
+    const { cdImageRef, cdWrapperRef, calcCdWrapperTransform } = useCD()
 
-    const {
-      currentLyric,
-      currentLine,
-      lyricListRef,
-      lyricScrollRef,
-    } = useLyric(currentTime)
+    const { currentLyric, currentLine, lyricListRef, lyricScrollRef } = useLyric(currentTime)
 
     const {
       currentShow,
@@ -58,7 +49,7 @@ const Player = defineComponent({
       middleRStyle,
       onMiddleTouchStart,
       onMiddleTouchMove,
-      onMiddleTouchEnd
+      onMiddleTouchEnd,
     } = useMiddleAnimation()
 
     // 监听当前歌曲变化->自动播放
@@ -66,7 +57,7 @@ const Player = defineComponent({
       currentSongReady.value = false
       const song = unref(currentSong)
       const audio = unref(audioRef)!
-      if(!val.id || !val.url) return
+      if (!val.id || !val.url) return
       audio.src = song.url
       await audio.play()
       playerStore.setPlayingState(true)
@@ -74,25 +65,29 @@ const Player = defineComponent({
     // 监听播放状态->控制audio
     watch(playing, (val) => {
       const audio = unref(audioRef)
-      if(val) audio!.play()
+      if (val) audio!.play()
       else {
         audio!.pause()
-        if(unref(fullScreen)) {
+        if (unref(fullScreen)) {
           calcCdWrapperTransform(cdWrapperRef, cdImageRef)
         }
       }
     })
 
     watch(fullScreen, (val) => {
-      if(val && unref(audioRef)) {
+      if (val && unref(audioRef)) {
       }
     })
 
-
     return () => (
       <div class={style.player}>
-        {unref(fullScreen) && (
-          <Transition name="normal">
+        <Transition
+          enterFromClass={style['normal-enter-from']}
+          leaveToClass={style['normal-leave-to']}
+          enterActiveClass={style['normal-enter-active']}
+          leaveActiveClass={style['normal-leave-active']}
+        >
+          {unref(fullScreen) && (
             <div class={style['normal-player']}>
               {/* 最小化按钮 */}
               <div class={style.background}>
@@ -199,8 +194,9 @@ const Player = defineComponent({
                 </div>
               </div>
             </div>
-          </Transition>
-        )}
+          )}
+        </Transition>
+
         <audio
           ref={audioRef}
           onPause={handleAudioPause}
