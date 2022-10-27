@@ -1,0 +1,103 @@
+.playList {
+  position: fixed;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: $color-background-d;
+  z-index: 200;
+  &.list-fade-enter-active, &.list-fade-leave-active {
+    transition: opacity .3s;
+    .list-wrapper {
+      transition: all .3s;
+    }
+  }
+  &.list-fade-enter-from, &.list-fade-leave-to {
+    opacity: 0;
+    .list-wrapper {
+      transform: translate3d(0, 100%, 0);
+    }
+  }
+  .list-wrapper {
+    z-index: 210;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    background-color: $color-highlight-background;
+    width: 100%;
+    .list-header {
+      padding: 20px 30px 10px 20px;
+      .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .icon {
+          margin-right: 10px;
+          font-size: $font-size-large-x;
+          color: $color-theme-d
+        }
+        .play-mode-text {
+          font-size: $font-size-medium;
+          color: $color-text-l;
+          flex: 1;
+        }
+        .clear-icon {
+          color: $color-background-d;
+          font-size: $font-size-large;
+        }
+      }
+    }
+    .list-content {
+      margin-top: 10px;
+      max-height: 240px;
+      overflow: hidden;
+      .item {
+        padding: 0 30px 0 20px;
+        height: 40px;
+        display: flex;
+        div {
+          width: 14px;
+        }
+        span {
+          margin-left: 10px;
+          flex: 1;
+          font-size: $font-size-medium;
+          color: $color-text-d;
+        }
+        i {
+          color: $color-theme-d;
+          font-size: $font-size-small;
+        }
+        i:nth-of-type(2) {
+          margin: 0 15px;
+        }
+      }
+    }
+    .list-add {
+      margin: 20px 0 30px 0;
+      color: $color-text-l;
+      display: flex;
+      justify-content: center;
+      .add {
+        display: inline-block;
+        border: 1px solid $color-text-l;
+        border-radius: 20px;
+        padding: 5px 10px;
+        font-size: $font-size-small;
+        text-align: center;
+        .text {
+          margin-left: 5px;
+        }
+      }
+    }
+    .list-footer {
+      height: 50px;
+      line-height: 50px;
+      width: 100%;
+      background-color: $color-background;
+      color: $color-text-l;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
