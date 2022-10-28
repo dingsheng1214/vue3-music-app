@@ -7,6 +7,8 @@ const Search = () => import('@/views/tabs/Search')
 
 const SingerDetail = () => import('@/views/tabs/SingerDetail')
 const Album = () => import('@/views/tabs/Album')
+import TopDetail from '@/views/tabs/TopDetail'
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -35,6 +37,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/top-list',
     component: TopList,
+    children: [
+      {
+        path: ':id',
+        component: TopDetail,
+      },
+    ],
   },
   {
     path: '/search',

@@ -1,11 +1,11 @@
-import { computed, defineComponent, h, nextTick, onMounted, Ref, ref, resolveComponent, Transition, unref, VNode, watch } from 'vue'
+import { computed, defineComponent, nextTick, onMounted, Ref, ref, unref, watch } from 'vue'
 import { getSingerList } from '@/api/singer'
 import Scroll from '@/components/base/Scroll'
 import { Singer as SingerType } from '#/global'
 import style from './Singer.module.scss'
 import { useRouter } from 'vue-router'
-import storage from '@/assets/js/storage/session';
-import { SINGER_KEY } from '@/assets/js/constant';
+import storage from '@/assets/js/storage/session'
+import { SINGER_KEY } from '@/assets/js/constant'
 import { SongListRouterView } from './SongList'
 
 type Singers = { title: string; list: SingerType[] }[]

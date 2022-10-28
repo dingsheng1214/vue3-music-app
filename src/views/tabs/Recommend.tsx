@@ -4,9 +4,9 @@ import Slider from '@/components/base/Slider'
 import Scroll from '@/components/base/Scroll'
 import { Slide, Album } from '#/global'
 import style from './Recommend.module.scss'
-import storage from '@/assets/js/storage/session';
-import { ALBUM_KEY } from '@/assets/js/constant';
-import { SongListRouterView } from './SongList';
+import storage from '@/assets/js/storage/session'
+import { ALBUM_KEY } from '@/assets/js/constant'
+import { SongListRouterView } from './SongList'
 import { useRouter } from 'vue-router'
 
 const Recommend = defineComponent({
@@ -25,11 +25,10 @@ const Recommend = defineComponent({
     })
     const toAlbum = (album: Album) => {
       router.push({
-        path: `/recommend/${album.id}`
+        path: `/recommend/${album.id}`,
       })
       selectedAlbum.value = album
       storage.set(ALBUM_KEY, unref(selectedAlbum))
-
     }
     return () => (
       <div class={style.recommend} v-loading={unref(loading)}>
@@ -39,7 +38,7 @@ const Recommend = defineComponent({
               <div>
                 <div class={style['slider-wrapper']}>
                   <div class={style['slider-content']}>
-                    {unref(sliderList).length && <Slider sliders={unref(sliderList)} />}
+                    {unref(sliderList).length ? <Slider sliders={unref(sliderList)} /> : null}
                   </div>
                 </div>
                 <div class={style['recommend-list']}>
@@ -58,7 +57,6 @@ const Recommend = defineComponent({
                     </div>
                   ))}
                 </div>
-
               </div>
             ),
           }}
