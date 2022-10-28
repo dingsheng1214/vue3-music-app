@@ -3,9 +3,10 @@ import { getSingerList } from '@/api/singer'
 import Scroll from '@/components/base/Scroll'
 import { Singer as SingerType } from '#/global'
 import style from './Singer.module.scss'
-import { RouteLocationNormalizedLoaded, RouterView, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import storage from '@/assets/js/storage/session';
 import { SINGER_KEY } from '@/assets/js/constant';
+import { SongListRouterView } from './SongList'
 
 type Singers = { title: string; list: SingerType[] }[]
 function useFixed(singers: Ref<Singers>, singersRef: Ref) {
@@ -183,23 +184,7 @@ const Singer = defineComponent({
             ),
           }}
         </Scroll>
-        <RouterView>
-          {{
-            default: ({ Component: X, route: R}: {Component: VNode, route: RouteLocationNormalizedLoaded}) => {
-              console.log('RouterView default: ', selectedSinger.value, X);
-              if(X !== undefined && selectedSinger.value !== undefined) {
-                // 给路由激活组件 传递props
-                X!.props!.singer = selectedSinger.value
-                // X.props = {singer: selectedSinger.value}
-              }
-                return (
-                  <Transition name="slide">
-                    {X}
-                  </Transition>
-                )
-            }
-          }}
-        </RouterView>
+        <SongListRouterView data={unref(selectedSinger)} />
       </div>
     )
   },
