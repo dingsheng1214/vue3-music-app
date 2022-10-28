@@ -118,12 +118,12 @@ const PlayList = defineComponent({
                 </TransitionGroup>
               </Scroll>
 
-              <div class={style['list-add']}>
+              {/* <div class={style['list-add']}>
                 <div class={style.add}>
                   <i class="icon-add" />
                   <span class={style.text}>添加歌曲到队列</span>
                 </div>
-              </div>
+              </div> */}
 
               <div class={style['list-footer']}>
                 <span onClick={() => emit('close')}>关闭</span>

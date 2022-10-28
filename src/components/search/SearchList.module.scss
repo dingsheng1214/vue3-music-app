@@ -1,0 +1,23 @@
+  .search-list {
+    .search-item {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      overflow: hidden;
+
+        .icon {
+            flex: 0 0 30px;
+            width: 30px;
+            font-size: 14px;
+            color: $color-text-d;
+          }
+
+          .name {
+            flex: 1;
+            font-size: $font-size-medium;
+            color: $color-text-d;
+            overflow: hidden;
+            @include no-wrap();
+          }
+    }
+  }

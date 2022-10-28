@@ -43,6 +43,7 @@ function useLyric(currentTime: Ref<number>) {
    * @returns
    */
   function lyricParse(lyric: string) {
+    if (!lyric) return []
     let lines: string[] = lyric.split('\n')
     const offsetIndex = lines.findIndex((line) => line === '[offset:0]')
     lines = lines.slice(offsetIndex + 1)

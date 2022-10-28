@@ -163,5 +163,29 @@ export const usePlayerStore = defineStore({
         this.setPlayingState(false)
       }
     },
+    addSong(song: Song) {
+      const playlist = this.playList.slice()
+      const sequenceList = this.sequenceList.slice()
+      let { currentIndex } = this
+      const playIndex = findIndex(playlist, song)
+
+      if (playIndex > -1) {
+        currentIndex = playIndex
+      } else {
+        playlist.push(song)
+        currentIndex = playlist.length - 1
+      }
+
+      const sequenceIndex = findIndex(sequenceList, song)
+      if (sequenceIndex === -1) {
+        sequenceList.push(song)
+      }
+
+      this.setSequenceList(sequenceList)
+      this.setPlayList(playlist)
+      this.setCurrentIndex(currentIndex)
+      this.setPlayingState(true)
+      this.setFullScreen(true)
+    },
   },
 })
