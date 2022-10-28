@@ -18,6 +18,10 @@ const MusicList = defineComponent({
     songs: {
       type: Array as PropType<Song[]>,
     },
+    rank: {
+      type: Boolean as PropType<boolean>,
+      default: () => false,
+    },
   },
   setup: (props) => {
     const router = useRouter()
@@ -126,7 +130,7 @@ const MusicList = defineComponent({
           {{
             default: () => (
               <div class={style['song-list-wrapper']}>
-                <SongList songs={props.songs} onItemClick={onItemClick} />
+                <SongList songs={props.songs} onItemClick={onItemClick} rank={props.rank} />
               </div>
             ),
           }}

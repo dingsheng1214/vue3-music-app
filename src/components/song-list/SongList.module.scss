@@ -6,6 +6,31 @@
     align-items: center;
     height: 64px;
     font-size: $font-size-medium;
+    .rank {
+      flex: 0 0 25px;
+      width: 25px;
+      margin-right: 20px;
+      text-align: center;
+      .icon {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        background-size: 25px 25px;
+      }
+      .icon-1 {
+        @include bg-image('@/assets/images/first')
+      }
+      .icon-2 {
+        @include bg-image('@/assets/images/second')
+      }
+      .icon-3 {
+        @include bg-image('@/assets/images/third')
+      }
+      .num {
+        color: $color-theme;
+        font-size: $font-size-large;
+      }
+    }
     .content {
       flex: 1;
       line-height: 20px;

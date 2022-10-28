@@ -15,10 +15,12 @@ plugins:
 rules: {
   'import/no-unresolved': 'off',
   'import/extensions': 'off',
+  'import/prefer-default-export': 'off',
   'vue/multi-word-component-names': 'off',
   'no-param-reassign': 'off',
-  "no-plusplus": 'off',
-  "no-bitwise": 'off',
-  'no-shadow': 'off'
+  'no-plusplus': 'off',
+  'no-bitwise': 'off',
+  'no-shadow': 'off',
+  'no-console': 'off'
 
 }

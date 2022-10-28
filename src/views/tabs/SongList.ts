@@ -25,7 +25,7 @@ type T = {
   title?: string
   pic: string
 }
-function getSongList(name: string, key: string, fetch: Function) {
+function getSongList(name: string, key: string, fetch: Function, rank = false) {
   const SongList = defineComponent({
     name,
     props: {
@@ -68,9 +68,10 @@ function getSongList(name: string, key: string, fetch: Function) {
         const vEmpty = resolveDirective('empty')
         const musicListVNode = withDirectives(
           h(MusicList, {
-            title: unref(computedData)?.title,
+            title: unref(computedData)?.title || unref(computedData)?.name,
             pic: unref(computedData)?.pic,
             songs: unref(songs),
+            rank,
           }),
           [
             [vLoading!, unref(loading)],

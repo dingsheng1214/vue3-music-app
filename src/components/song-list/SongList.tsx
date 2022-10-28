@@ -9,6 +9,10 @@ const SongList = defineComponent({
       type: Array as PropType<Song[]>,
       default: () => [],
     },
+    rank: {
+      type: Boolean as PropType<boolean>,
+      default: () => false,
+    },
   },
   emits: ['itemClick'],
   setup: (props, { emit }) => {
@@ -19,6 +23,16 @@ const SongList = defineComponent({
       <ul class={style['song-list']}>
         {props.songs.map((song, index) => (
           <li class={style.item} onClick={() => onClick(index)}>
+            {props.rank ? (
+              <div class={style.rank}>
+                {index < 3 ? (
+                  <span class={[style.icon, style[`icon-${index + 1}`]]}></span>
+                ) : (
+                  <span class={style.num}>{index + 1}</span>
+                )}
+              </div>
+            ) : null}
+
             <div class={style.content}>
               <div class={style.name}>{song.name}</div>
               <div class={style.desc}>
