@@ -1,13 +1,20 @@
-import { computed, defineComponent, ref, Transition, unref, watch } from 'vue'
+import { computed, defineComponent, PropType, ref, Transition, unref, watch } from 'vue'
 import useMiniSlider from '@/hooks/useMiniSlider'
 import { usePlayerStore } from '@/store'
 import { useCD } from './hooks'
 import style from './MiniPlayer.module.scss'
 import PlayList from './PlayList'
+import ProgressCircle from './ProgressCircle'
 
 const MiniPlayer = defineComponent({
   name: 'MiniPlayer',
-  setup: () => {
+  props: {
+    progress: {
+      type: Number as PropType<number>,
+      default: 0,
+    },
+  },
+  setup: (props) => {
     const playerStore = usePlayerStore()
     const currentSong = computed(() => playerStore.currentSong)
     const fullScreen = computed(() => playerStore.fullScreen)
@@ -63,18 +70,24 @@ const MiniPlayer = defineComponent({
                 </div>
               </div>
               <div class={style.control}>
-                <i
-                  onClick={handlePlayPauseIconClick}
-                  class={[
-                    style['icon-mini'],
-                    unref(playing) ? 'icon-pause-mini' : 'icon-play-mini',
-                  ]}
-                />
+                <ProgressCircle radius={32} progress={props.progress}>
+                  {{
+                    default: () => (
+                      <i
+                        onClick={handlePlayPauseIconClick}
+                        class={[
+                          style['icon-mini'],
+                          unref(playing) ? 'icon-pause-mini' : 'icon-play-mini',
+                        ]}
+                      />
+                    ),
+                  }}
+                </ProgressCircle>
               </div>
               <div class={style.control}>
                 <i
                   onClick={handlePlayListIconClick}
-                  class={[style['icon-mini'], 'icon-playlist']}
+                  class={[style['icon-playList'], 'icon-playlist']}
                 />
               </div>
             </div>

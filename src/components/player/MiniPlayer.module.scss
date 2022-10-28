@@ -63,6 +63,13 @@
     .icon-mini {
       color: $color-theme-d;
       font-size: 30px;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .icon-playList{
+      color: $color-theme-d;
+      font-size: 30px;
     }
   }
 }

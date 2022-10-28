@@ -4,6 +4,7 @@ import { useCD, useLyric, useMiddleAnimation, usePlayer, useProgressBar } from '
 import ProgressBar from './ProgressBar'
 import { formatTime } from '@/assets/js/util'
 import Scroll from '../base/Scroll'
+import MiniPlayer from './MiniPlayer'
 
 const Player = defineComponent({
   name: 'Player',
@@ -193,6 +194,7 @@ const Player = defineComponent({
           )}
         </Transition>
 
+        <MiniPlayer progress={unref(currentTime) / unref(currentSong).duration} />
         <audio
           ref={audioRef}
           onPause={handleAudioPause}
