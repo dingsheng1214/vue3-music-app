@@ -469,7 +469,7 @@ function registerAlbum(app) {
 
     const url = `https://u.y.qq.com/cgi-bin/musics.fcg?_=${getRandomVal()}&sign=${sign}`
 
-    post(url, data).then((response) => {
+    post(url, JSON.stringify(data)).then((response) => {
       const { data } = response
       if (data.code === ERR_OK) {
         const list = data.req_0.data.songlist

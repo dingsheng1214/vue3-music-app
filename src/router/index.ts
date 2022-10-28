@@ -6,6 +6,7 @@ const Rank = () => import('@/views/tabs/Rank')
 const Search = () => import('@/views/tabs/Search')
 
 const SingerDetail = () => import('@/views/tabs/SingerDetail')
+const Album = () => import('@/views/tabs/Album')
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -13,8 +14,13 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/recommend',
-    name: 'recommend',
     component: Recommend,
+    children: [
+      {
+        path: ':id',
+        component: Album
+      }
+    ]
   },
   {
     path: '/singer',

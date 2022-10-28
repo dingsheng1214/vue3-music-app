@@ -72,6 +72,8 @@ const MusicList = defineComponent({
       return {display}
     })
     onMounted(() => {
+      console.log('MusicList...');
+
       bgImageHeight.value = unref(bgImageRef).clientHeight
       maxScrollY.value = unref(bgImageHeight) - 40
     })
