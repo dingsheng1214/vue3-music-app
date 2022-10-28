@@ -4,9 +4,10 @@ import { useCD, useLyric, useMiddleAnimation, usePlayer, useProgressBar } from '
 import ProgressBar from './ProgressBar'
 import { formatTime } from '@/assets/js/util'
 import Scroll from '../base/Scroll'
+
 const Player = defineComponent({
   name: 'Player',
-  setup: (props, context) => {
+  setup: () => {
     const audioRef = ref<HTMLAudioElement>()
     const currentSongReady = ref(false)
     const moving = ref(false)
@@ -26,10 +27,10 @@ const Player = defineComponent({
       handleAudioCanPlay,
       handleAudioTimeUpdate,
       handleAudioEnded,
-      class_disabled,
-      class_playIcon,
-      class_modeIcon,
-      class_favorite,
+      classDisabled,
+      classPlayIcon,
+      classModeIcon,
+      classFavorite,
     } = usePlayer(audioRef, currentSongReady, moving)
 
     const {
@@ -71,11 +72,6 @@ const Player = defineComponent({
         if (unref(fullScreen)) {
           calcCdWrapperTransform(cdWrapperRef, cdImageRef)
         }
-      }
-    })
-
-    watch(fullScreen, (val) => {
-      if (val && unref(audioRef)) {
       }
     })
 
@@ -172,22 +168,22 @@ const Player = defineComponent({
                 {/* 操作按钮组 */}
                 <div class={style.operators}>
                   <div class={[style.icon, style['i-left']]}>
-                    <i class={unref(class_modeIcon)} onClick={handleChangeMode} />
+                    <i class={unref(classModeIcon)} onClick={handleChangeMode} />
                   </div>
-                  <div class={[style.icon, style['i-left'], style[unref(class_disabled)]]}>
+                  <div class={[style.icon, style['i-left'], style[unref(classDisabled)]]}>
                     <i class="icon-prev" onClick={handlePrevSong} />
                   </div>
 
-                  <div class={[style.icon, style['i-center'], unref(class_disabled)]}>
-                    <i class={unref(class_playIcon)} onClick={handleTogglePlay} />
+                  <div class={[style.icon, style['i-center'], unref(classDisabled)]}>
+                    <i class={unref(classPlayIcon)} onClick={handleTogglePlay} />
                   </div>
 
-                  <div class={[style.icon, style['i-right'], unref(class_disabled)]}>
+                  <div class={[style.icon, style['i-right'], unref(classDisabled)]}>
                     <i class="icon-next" onClick={handleNextSong} />
                   </div>
                   <div class={[style.icon, style['i-right']]}>
                     <i
-                      class={class_favorite(unref(currentSong))}
+                      class={classFavorite(unref(currentSong))}
                       onClick={() => handleTogglerFavorite(unref(currentSong))}
                     />
                   </div>

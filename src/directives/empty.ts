@@ -1,7 +1,7 @@
 import { Directive, createApp } from 'vue'
 import Empty from '@/components/base/Empty'
 
-const name = Empty.name
+const { name } = Empty
 
 function append(el: any) {
   el.appendChild(el[name].$el)
@@ -12,7 +12,6 @@ function remove(el: any) {
 
 const empty: Directive = {
   mounted(el, { value }) {
-
     const app = createApp(Empty)
     const instance = app.mount(document.createElement('div'))
     el[name] = instance
@@ -22,8 +21,7 @@ const empty: Directive = {
     }
   },
   updated(el, { value, oldValue }) {
-    console.log('v-empty updated');
-    if(!value && oldValue) {
+    if (!value && oldValue) {
       remove(el)
     }
   },

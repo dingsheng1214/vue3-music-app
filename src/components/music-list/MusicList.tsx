@@ -1,24 +1,25 @@
-import { Song } from '#/global';
-import { computed, defineComponent, onMounted, PropType, ref, unref } from 'vue';
-import Scroll from '../base/Scroll';
-import style from './MusicList.module.scss';
-import SongList from '@/components/song-list/SongList';
-import { usePlayerStore } from '@/store';
-import { useRouter } from 'vue-router';
+import { computed, defineComponent, onMounted, PropType, ref, unref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Song } from '#/global'
+import Scroll from '../base/Scroll'
+import style from './MusicList.module.scss'
+import SongList from '@/components/song-list/SongList'
+import { usePlayerStore } from '@/store'
+
 const MusicList = defineComponent({
   name: 'MusicList',
-  props: {
-    title: {
-      type: String as PropType<string>
-    },
+  props: {
+    title: {
+      type: String as PropType<string>,
+    },
     pic: {
-     type: String as PropType<string>
+      type: String as PropType<string>,
     },
     songs: {
-      type: Array as PropType<Song[]>
-    }
-  },
-  setup: (props, context) => {
+      type: Array as PropType<Song[]>,
+    },
+  },
+  setup: (props) => {
     const router = useRouter()
     const scrollY = ref<number>(0)
     const maxScrollY = ref<number>(0)
@@ -31,7 +32,7 @@ const MusicList = defineComponent({
       let zIndex = 0
       let scale = 1
       let translateZ = 0
-      if(unref(scrollY) > unref(maxScrollY)) {
+      if (unref(scrollY) > unref(maxScrollY)) {
         // 上滑 歌曲列表顶部 触碰到title 底部，此时 提升title层级 就能盖住歌曲列表
         zIndex = 10 //
         height = '40px'
@@ -39,7 +40,7 @@ const MusicList = defineComponent({
         translateZ = 1
       }
 
-      if(unref(scrollY) < 0) {
+      if (unref(scrollY) < 0) {
         // 下拉 图片放大
         scale = 1 + Math.abs(unref(scrollY) / unref(bgImageHeight))
       }
@@ -48,22 +49,26 @@ const MusicList = defineComponent({
         height,
         paddingTop,
         backgroundImage: `url(${props.pic})`,
-        transform: `scale(${scale})translateZ(${translateZ}px)`
+        transform: `scale(${scale})translateZ(${translateZ}px)`,
       }
     })
     const filterStyle = computed(() => {
       let blur = 0
       // 上滑时 bg-image 模糊
       if (unref(scrollY) >= 0) {
-        blur = Math.min(unref(maxScrollY) / unref(bgImageHeight), unref(scrollY )/ unref(bgImageHeight)) * 20
+        blur =
+          Math.min(
+            unref(maxScrollY) / unref(bgImageHeight),
+            unref(scrollY) / unref(bgImageHeight),
+          ) * 20
       }
       return {
-        backdropFilter: `blur(${blur}px)`
+        backdropFilter: `blur(${blur}px)`,
       }
     })
     const scrollStyle = computed(() => {
       return {
-        top: `${unref(bgImageHeight)}px`
+        top: `${unref(bgImageHeight)}px`,
       }
     })
     const playBtnStyle = computed(() => {
@@ -71,21 +76,18 @@ const MusicList = defineComponent({
       if (unref(scrollY) >= unref(maxScrollY)) {
         display = 'none'
       }
-      return {display}
+      return { display }
     })
     onMounted(() => {
-      console.log('MusicList...');
-
       bgImageHeight.value = unref(bgImageRef).clientHeight
       maxScrollY.value = unref(bgImageHeight) - 40
     })
-    const onScroll = (pos: {x: number, y: number}) => {
-      console.log('onScroll', pos);
+    const onScroll = (pos: { x: number; y: number }) => {
       scrollY.value = -pos.y
     }
 
     const { selectPlay, randomPlay } = usePlayerStore()
-    const onItemClick = ({ list, index }: {list: Song[], index: number}) => {
+    const onItemClick = ({ list, index }: { list: Song[]; index: number }) => {
       selectPlay(list, index)
     }
     const onRandomPlay = () => {
@@ -94,7 +96,7 @@ const MusicList = defineComponent({
     const goBack = () => {
       router.go(-1)
     }
-    return () => (
+    return () => (
       <div class={style['music-list']}>
         <div class={style.back} onClick={goBack}>
           <i class={['icon-back', style['back-icon']].join(' ')}></i>
@@ -102,7 +104,11 @@ const MusicList = defineComponent({
         <h1 class={style.title}>{props.title}</h1>
         <div ref={bgImageRef} class={style['bg-image']} style={unref(bgImageStyle)}>
           {props.songs?.length! > 0 && (
-            <div class={style['play-btn-wrapper']} style={unref(playBtnStyle)} onClick={onRandomPlay}>
+            <div
+              class={style['play-btn-wrapper']}
+              style={unref(playBtnStyle)}
+              onClick={onRandomPlay}
+            >
               <div class={style['play-btn']}>
                 <i class="icon-play"></i>
                 <span class={style.text}>随机播放全部</span>
@@ -127,6 +133,6 @@ const MusicList = defineComponent({
         </Scroll>
       </div>
     )
-  }
+  },
 })
 export default MusicList

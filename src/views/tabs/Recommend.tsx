@@ -1,4 +1,5 @@
-import { DefineComponent, defineComponent, onMounted, ref, Transition, unref, VNode } from 'vue'
+import { defineComponent, onMounted, ref, unref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getRecommend } from '@/api/recommend'
 import Slider from '@/components/base/Slider'
 import Scroll from '@/components/base/Scroll'
@@ -7,7 +8,6 @@ import style from './Recommend.module.scss'
 import storage from '@/assets/js/storage/session'
 import { ALBUM_KEY } from '@/assets/js/constant'
 import { SongListRouterView } from './SongList'
-import { useRouter } from 'vue-router'
 
 const Recommend = defineComponent({
   name: 'Recommend',

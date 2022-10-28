@@ -1,7 +1,7 @@
 import { Directive, createApp } from 'vue'
 import Loading from '@/components/base/Loading'
 
-const name = Loading.name
+const { name } = Loading
 function append(el: any) {
   el.appendChild(el[name].$el)
 }
@@ -11,7 +11,6 @@ function remove(el: any) {
 
 const loading: Directive = {
   mounted(el, { value }) {
-    console.log('v-loading mounted');
     const app = createApp(Loading)
     const instance = app.mount(document.createElement('div'))
     el[name] = instance
@@ -21,9 +20,7 @@ const loading: Directive = {
     }
   },
   updated(el, { value, oldValue }) {
-    console.log('v-loading updated', value, oldValue);
-
-    if(!value && oldValue) {
+    if (!value && oldValue) {
       remove(el)
     }
   },

@@ -35,7 +35,7 @@ export type Song = {
   singer: string
   url: string
   duration: number
-  album: string,
+  album: string
   lyric?: string
 }
 
@@ -45,7 +45,7 @@ export type Song = {
 export const enum PlayMode {
   SEQUENCE = 0,
   LOOP = 1,
-  RANDOM = 2
+  RANDOM = 2,
 }
 
 /**
@@ -56,6 +56,5 @@ export type TopItem = {
   name: string
   period: string
   pic: string
-  songList: {id: number, singerName: string, songName: string}[]
+  songList: { id: number; singerName: string; songName: string }[]
 }
-

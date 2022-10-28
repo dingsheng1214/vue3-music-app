@@ -16,6 +16,7 @@ function get(url: string, params?: Record<string, any>) {
       if (serverData.code === ERR_OK) {
         return serverData.result
       }
+      return res.data
     })
     .catch((e) => {
       console.log(e)

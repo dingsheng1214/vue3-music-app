@@ -19,7 +19,7 @@ export default function useScroll(
     })
 
     if (options?.probeType > 0) {
-      scroll.value.on('scroll', (pos: {x : number, y: number}) => {
+      scroll.value.on('scroll', (pos: { x: number; y: number }) => {
         cb(pos)
       })
     }

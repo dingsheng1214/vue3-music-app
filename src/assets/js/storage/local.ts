@@ -1,4 +1,3 @@
-
 function get(key: string) {
   return localStorage.getItem(key)
 }
@@ -8,8 +7,8 @@ function set<T>(key: string, val: T) {
 }
 
 function init<T>(key: string, initVal: T) {
-  let val = get(key)
-  if(val) {
+  const val = get(key)
+  if (val) {
     initVal = JSON.parse(val)
   }
   return initVal
@@ -18,6 +17,5 @@ function init<T>(key: string, initVal: T) {
 export default {
   get,
   set,
-  init
+  init,
 }
-

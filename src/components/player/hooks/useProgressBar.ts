@@ -1,13 +1,16 @@
-import { Ref, unref } from "vue";
-import { usePlayerStore } from '@/store';
+import { Ref, unref } from 'vue'
+import { usePlayerStore } from '@/store'
 
-function useProgressBar(audioRef: Ref<HTMLAudioElement | undefined>,moving: Ref<boolean>, currentTime: Ref<number>) {
+function useProgressBar(
+  audioRef: Ref<HTMLAudioElement | undefined>,
+  moving: Ref<boolean>,
+  currentTime: Ref<number>,
+) {
   const playerStore = usePlayerStore()
   const handleProgressBarMoveStart = () => {
     moving.value = true
   }
   const handleProgressBarMoving = (progress: number) => {
-    console.log('handleProgressBarMove', progress);
     currentTime.value = playerStore.currentSong.duration * progress
   }
   const handleProgressBarMoveEnd = () => {
@@ -15,7 +18,6 @@ function useProgressBar(audioRef: Ref<HTMLAudioElement | undefined>,moving: Ref<
     unref(audioRef)!.currentTime! = unref(currentTime)
   }
   const handleProgressBarClick = (progress: number) => {
-    console.log('handleProgressBarClick', progress);
     currentTime.value = playerStore.currentSong.duration * progress
     moving.value = true
     unref(audioRef)!.currentTime! = unref(currentTime)
@@ -25,7 +27,7 @@ function useProgressBar(audioRef: Ref<HTMLAudioElement | undefined>,moving: Ref<
     handleProgressBarMoveStart,
     handleProgressBarMoving,
     handleProgressBarMoveEnd,
-    handleProgressBarClick
+    handleProgressBarClick,
   }
 }
 export default useProgressBar

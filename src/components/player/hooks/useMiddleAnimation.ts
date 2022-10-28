@@ -1,10 +1,10 @@
-import { ref } from "vue"
+import { ref } from 'vue'
 
 type MiddleType = 'cd' | 'lyric'
 type Touch = {
-  startX: number,
-  startY: number,
-  percent: number,
+  startX: number
+  startY: number
+  percent: number
   // 方向锁
   directionLock: '' | 'h' | 'v'
 }
@@ -17,15 +17,13 @@ function useMiddleAnimation() {
   const middleLStyle = ref()
   const middleRStyle = ref()
 
-
-
   // 在一次touch事件中共享
 
   let touch: Touch = {
     startX: 0,
     startY: 0,
     percent: 0,
-    directionLock: ''
+    directionLock: '',
   }
 
   function onMiddleTouchStart(e: TouchEvent) {
@@ -45,59 +43,47 @@ function useMiddleAnimation() {
     const deltaY = e.touches[0].pageY - touch.startY
 
     // 方向锁, 当y轴变动大于x轴变动时 退出
-    if(!touch.directionLock) {
+    if (!touch.directionLock) {
       touch.directionLock = Math.abs(deltaX) >= Math.abs(deltaY) ? 'h' : 'v'
     }
-    if(touch.directionLock === 'v') {
+    if (touch.directionLock === 'v') {
       return
     }
 
     // 初始偏移量, 当前视图为cd时,偏移量为0; 当前视图为lyric时,偏移量为屏幕宽度
     const left = currentView === 'cd' ? 0 : -windowWidth
     // 偏移量
-    const offsetWidth =  Math.min(0, Math.max(-windowWidth, left + deltaX))
+    const offsetWidth = Math.min(0, Math.max(-windowWidth, left + deltaX))
     // 偏移比例
     touch.percent = Math.abs(offsetWidth / windowWidth)
 
-    console.log({
-      currentX: e.touches[0].pageX,
-      windowWidth,
-      deltaX,
-      left,
-      offsetWidth,
-      touch
-    });
-
-
-    if(currentView === 'cd') {
-      if(touch.percent > 0.2) {
+    if (currentView === 'cd') {
+      if (touch.percent > 0.2) {
         currentShow.value = 'lyric'
       } else {
         currentShow.value = 'cd'
       }
+    } else if (touch.percent < 0.8) {
+      currentShow.value = 'cd'
     } else {
-      if(touch.percent < 0.8) {
-        currentShow.value = 'cd'
-      } else {
-        currentShow.value = 'lyric'
-      }
+      currentShow.value = 'lyric'
     }
 
     middleLStyle.value = {
       opacity: 1 - touch.percent,
-      transitionDuration: '0ms'
+      transitionDuration: '0ms',
     }
 
     middleRStyle.value = {
       transform: `translateX(${offsetWidth}px)`,
-      transitionDuration: '0ms'
+      transitionDuration: '0ms',
     }
   }
 
-  function onMiddleTouchEnd(e: TouchEvent) {
+  function onMiddleTouchEnd() {
     let offsetWidth
     let opacity
-    if(currentShow.value === 'cd') {
+    if (currentShow.value === 'cd') {
       currentView = 'cd'
       offsetWidth = 0
       opacity = 1
@@ -109,18 +95,18 @@ function useMiddleAnimation() {
 
     middleLStyle.value = {
       opacity,
-      transitionDuration: '300ms'
+      transitionDuration: '300ms',
     }
     middleRStyle.value = {
       transform: `translateX(${offsetWidth}px)`,
-      transitionDuration: '300ms'
+      transitionDuration: '300ms',
     }
 
     touch = {
       startX: 0,
       startY: 0,
       percent: 0,
-      directionLock: ''
+      directionLock: '',
     }
   }
 
@@ -130,7 +116,7 @@ function useMiddleAnimation() {
     middleRStyle,
     onMiddleTouchStart,
     onMiddleTouchMove,
-    onMiddleTouchEnd
+    onMiddleTouchEnd,
   }
 }
 

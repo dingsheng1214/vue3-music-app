@@ -17,5 +17,8 @@ rules: {
   'import/extensions': 'off',
   'vue/multi-word-component-names': 'off',
   'no-param-reassign': 'off',
-  "allowForLoopAfterthoughts": 'on'
+  "no-plusplus": 'off',
+  "no-bitwise": 'off',
+  'no-shadow': 'off'
+
 }

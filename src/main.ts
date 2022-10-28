@@ -7,7 +7,9 @@ import empty from '@/directives/empty'
 
 import '@/assets/scss/index.scss'
 
-createApp(App).use(router).use(store)
-.directive('loading', loading)
-.directive('empty', empty)
-.mount('#app')
+createApp(App)
+  .use(router)
+  .use(store)
+  .directive('loading', loading)
+  .directive('empty', empty)
+  .mount('#app')

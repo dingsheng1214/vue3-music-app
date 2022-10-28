@@ -12,3 +12,5 @@ dist
 .local
 /bin
 Dockerfile
+
+/backend

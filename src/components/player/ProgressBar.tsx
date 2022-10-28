@@ -1,38 +1,48 @@
-import { emit, off } from 'process';
-import { computed, defineComponent, onMounted, PropType, ref, unref, watch } from 'vue';
-import style from './ProgressBar.module.scss';
+import { computed, defineComponent, onMounted, PropType, ref, unref, watch } from 'vue'
+import style from './ProgressBar.module.scss'
 
 const progressBtnWidth = 16
 const ProgressBar = defineComponent({
   name: 'ProgressBar',
-  props: {
-    progress: {
-      type: Number as PropType<number>, // 进度条比例0-1
+  props: {
+    progress: {
+      type: Number as PropType<number>, // 进度条比例0-1
       default: () => 0,
-    }
-  },
+    },
+  },
   emits: ['touchStart', 'touchMove', 'touchEnd', 'click'],
-  setup: (props, { emit }) => {
+  setup: (props, { emit }) => {
     const offset = ref(0)
     const progressRef = ref<HTMLElement>()
-    let barWidth: number, progressBarLeft: number
+    let barWidth: number
+    let progressBarLeft: number
 
     onMounted(() => {
-      barWidth = unref(progressRef)?.clientWidth! - progressBtnWidth
-      progressBarLeft = unref(progressRef)?.getBoundingClientRect().left!
+      const progressEl = unref(progressRef)
+      if (progressEl) {
+        barWidth = progressEl.clientWidth - progressBtnWidth
+        progressBarLeft = progressEl.getBoundingClientRect().left!
+      }
     })
+
+    const setOffset = () => {
+      const progressEl = unref(progressRef)
+      let res = 0
+      if (progressEl) {
+        const barWidth = progressEl.clientWidth - progressBtnWidth
+        res = barWidth * props.progress
+      }
+      return res
+    }
     // 监听progress,更新偏移量
-    watch(props, (val) => {
+    watch(props, () => {
       offset.value = setOffset()
     })
-    const setOffset = () => {
-      const barWidth = unref(progressRef)?.clientWidth! - progressBtnWidth
-      return barWidth * props.progress
-    }
-    const processOffsetStyle = computed(() => ({width: `${(unref(offset))}px`}))
-    const processBtnOffsetStyle = computed(() => ({transform: `translateX(${unref(offset)}px)`}))
 
-    const handleTouchStart = (e: TouchEvent) => {
+    const processOffsetStyle = computed(() => ({ width: `${unref(offset)}px` }))
+    const processBtnOffsetStyle = computed(() => ({ transform: `translateX(${unref(offset)}px)` }))
+
+    const handleTouchStart = () => {
       emit('touchStart')
     }
 
@@ -43,7 +53,7 @@ const ProgressBar = defineComponent({
       emit('touchMove', progress)
     }
 
-    const handleTouchEnd = (e: TouchEvent) => {
+    const handleTouchEnd = () => {
       emit('touchEnd')
     }
 
@@ -52,12 +62,8 @@ const ProgressBar = defineComponent({
       const progress = Math.min(1, Math.max(moveWidth / barWidth, 0))
       emit('click', progress)
     }
-    return () => (
-      <div
-        ref={progressRef}
-        class={style['progress-bar']}
-        onClick={handleClick}
-      >
+    return () => (
+      <div ref={progressRef} class={style['progress-bar']} onClick={handleClick}>
         <div class={style['bar-inner']}>
           <div class={style.progress} style={unref(processOffsetStyle)}>
             <div
@@ -71,7 +77,7 @@ const ProgressBar = defineComponent({
           </div>
         </div>
       </div>
-    )
-  }
+    )
+  },
 })
 export default ProgressBar

@@ -6,20 +6,20 @@ function useCD() {
 
   // 暂停时重置cd image包裹元素的transform
   const calcCdWrapperTransform = (
-    cdWrapperRef: Ref<HTMLDivElement | undefined>,
-    cdImageRef: Ref<HTMLImageElement | undefined>,
+    _cdWrapperRef: Ref<HTMLDivElement | undefined>,
+    _cdImageRef: Ref<HTMLImageElement | undefined>,
   ) => {
-    const innerTransform = getComputedStyle(unref(cdImageRef)!).transform
-    const wrapperTRansform = getComputedStyle(unref(cdWrapperRef)!).transform
+    const innerTransform = getComputedStyle(unref(_cdImageRef)!).transform
+    const wrapperTRansform = getComputedStyle(unref(_cdWrapperRef)!).transform
 
-    cdWrapperRef.value!.style.transform =
+    _cdWrapperRef.value!.style.transform =
       wrapperTRansform === 'none' ? innerTransform : innerTransform.concat(' ', wrapperTRansform)
   }
 
   return {
     cdImageRef,
     cdWrapperRef,
-    calcCdWrapperTransform
+    calcCdWrapperTransform,
   }
 }
 

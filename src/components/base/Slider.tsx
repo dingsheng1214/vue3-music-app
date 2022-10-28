@@ -1,4 +1,4 @@
-import { defineComponent, PropType, ref, unref } from 'vue'
+import { defineComponent, PropType, unref } from 'vue'
 import useSlider from '@/hooks/useSlider'
 import style from './Slider.module.scss'
 import { Slide } from '#/global'

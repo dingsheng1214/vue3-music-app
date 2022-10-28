@@ -1,9 +1,14 @@
-import { PlayMode, Song } from '#/global'
 import { defineStore } from 'pinia'
-import { shuffle } from '@/assets/js/util';
-import storage from '@/assets/js/storage/local';
-import { FAVORITE_KEY} from '@/assets/js/constant';
+import { PlayMode, Song } from '#/global'
+import { shuffle } from '@/assets/js/util'
+import storage from '@/assets/js/storage/local'
+import { FAVORITE_KEY } from '@/assets/js/constant'
 
+function findIndex(list: Song[], song: Song) {
+  return list.findIndex((item) => {
+    return item.id === song.id
+  })
+}
 export interface PlayerState {
   /**
    * 歌曲列表
@@ -28,17 +33,16 @@ export interface PlayerState {
   /**
    * 全屏
    */
-  fullScreen: boolean,
+  fullScreen: boolean
   /**
    * 收藏列表
    */
-  favoriteList: Song[],
+  favoriteList: Song[]
 }
 
 export const usePlayerStore = defineStore({
   id: 'app-player',
   state: (): PlayerState => {
-
     return {
       sequenceList: [],
       playList: [],
@@ -46,7 +50,7 @@ export const usePlayerStore = defineStore({
       playMode: PlayMode.SEQUENCE,
       currentIndex: 0,
       fullScreen: false,
-      favoriteList: storage.init(FAVORITE_KEY, [])
+      favoriteList: storage.init(FAVORITE_KEY, []),
     }
   },
   getters: {
@@ -55,7 +59,7 @@ export const usePlayerStore = defineStore({
      */
     currentSong: (state) => {
       return state.playList[state.currentIndex] || {}
-    }
+    },
   },
   actions: {
     setPlayingState(playing: boolean) {
@@ -88,7 +92,6 @@ export const usePlayerStore = defineStore({
       return this
     },
 
-
     selectPlay(list: Song[], index: number) {
       this.setPlayMode(PlayMode.SEQUENCE)
         .setSequenceList(list)
@@ -107,30 +110,30 @@ export const usePlayerStore = defineStore({
     },
     changeMode(mode: PlayMode) {
       let newPlayList = this.sequenceList
-      if(mode === PlayMode.RANDOM) {
+      if (mode === PlayMode.RANDOM) {
         newPlayList = shuffle(this.sequenceList)
       }
 
-      const newCurrentIndex = newPlayList.findIndex(song => song.id === this.currentSong.id)
+      const newCurrentIndex = newPlayList.findIndex((song) => song.id === this.currentSong.id)
       this.setPlayList(newPlayList)
       this.setCurrentIndex(newCurrentIndex)
       this.setPlayMode(mode)
     },
     toggleFavorite(song: Song) {
-      const localStorage_favoriteList = this.favoriteList
-      const index = localStorage_favoriteList.findIndex(item => item.id === song.id)
+      const localStorageFavoriteList = this.favoriteList
+      const index = localStorageFavoriteList.findIndex((item) => item.id === song.id)
 
-      if(index > -1) {
-        localStorage_favoriteList.splice(index, 1)
+      if (index > -1) {
+        localStorageFavoriteList.splice(index, 1)
       } else {
-        localStorage_favoriteList.push(song)
+        localStorageFavoriteList.push(song)
       }
 
-      this.setFavoriteSet(localStorage_favoriteList)
+      this.setFavoriteSet(localStorageFavoriteList)
     },
     setSongLyric(song: Song, lyric: string) {
-      this.sequenceList.map(item => {
-        if(item.id === song.id) {
+      this.sequenceList.forEach((item) => {
+        if (item.id === song.id) {
           item.lyric = lyric
         }
       })
@@ -148,7 +151,7 @@ export const usePlayerStore = defineStore({
       sequenceList.splice(sequenceIndex, 1)
       playList.splice(playIndex, 1)
 
-      let currentIndex = this.currentIndex
+      let { currentIndex } = this
       if (playIndex < currentIndex || currentIndex === playList.length) {
         currentIndex--
       }
@@ -159,12 +162,6 @@ export const usePlayerStore = defineStore({
       if (!playList.length) {
         this.setPlayingState(false)
       }
-    }
-
+    },
   },
 })
-function findIndex(list: Song[], song: Song) {
-  return list.findIndex((item) => {
-    return item.id === song.id
-  })
-}

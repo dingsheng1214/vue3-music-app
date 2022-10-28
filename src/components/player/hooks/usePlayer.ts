@@ -1,8 +1,12 @@
-import {usePlayerStore} from '@/store';
-import { computed, ref, Ref, unref } from 'vue';
-import { PlayMode, Song } from '#/global';
+import { computed, ref, Ref, unref } from 'vue'
+import { usePlayerStore } from '@/store'
+import { PlayMode, Song } from '#/global'
 
-function usePlayer(audioRef: Ref<HTMLAudioElement | undefined>, currentSongReady: Ref<boolean>, moving: Ref<boolean>) {
+function usePlayer(
+  audioRef: Ref<HTMLAudioElement | undefined>,
+  currentSongReady: Ref<boolean>,
+  moving: Ref<boolean>,
+) {
   const playerStore = usePlayerStore()
   const playList = computed(() => playerStore.playList)
   const currentIndex = computed(() => playerStore.currentIndex)
@@ -64,8 +68,8 @@ function usePlayer(audioRef: Ref<HTMLAudioElement | undefined>, currentSongReady
     playerStore.changeMode(mode)
   }
 
-  const handleTogglerFavorite = (currentSong: Song) => {
-    playerStore.toggleFavorite(currentSong)
+  const handleTogglerFavorite = (_currentSong: Song) => {
+    playerStore.toggleFavorite(_currentSong)
   }
 
   /**
@@ -86,57 +90,56 @@ function usePlayer(audioRef: Ref<HTMLAudioElement | undefined>, currentSongReady
   }
 
   const handleAudioTimeUpdate = (event: any) => {
-    if(!unref(moving)) {
+    if (!unref(moving)) {
       currentTime.value = event.target.currentTime
     }
   }
 
-  const handleAudioEnded = (event: any) => {
+  function loop() {
+    const audioEl = audioRef.value
+    audioEl!.currentTime = 0
+    audioEl!.play()
+    playerStore.setPlayingState(true)
+  }
+  const handleAudioEnded = () => {
     // 当前歌曲结束后根据播放模式播放下一首
-    const playMode = playerStore.playMode
-    if(playMode === PlayMode.LOOP) {
-      _loop()
-    }else {
+    const { playMode } = playerStore
+    if (playMode === PlayMode.LOOP) {
+      loop()
+    } else {
       handleNextSong()
     }
   }
 
-  function _loop() {
-      const audioEl = audioRef.value
-      audioEl!.currentTime = 0
-      audioEl!.play()
-      playerStore.setPlayingState(true)
-  }
-
-
   /**
    * 播放/暂停 按钮切换
    */
-  const class_playIcon = computed(() => {
+  const classPlayIcon = computed(() => {
     return unref(playing) ? 'icon-pause' : 'icon-play'
   })
   /**
    * 播放/暂停/上一首/下一首/模式 按钮是否可用
    */
-  const class_disabled = computed(() => {
+  const classDisabled = computed(() => {
     return unref(currentSongReady) ? '' : 'disable'
   })
   /**
    * 顺序/随机/循环 按钮切换
    */
-  const class_modeIcon = computed(() => {
+  const classModeIcon = computed(() => {
     const mode = unref(playMode)
-    return mode === PlayMode.SEQUENCE
-      ? 'icon-sequence'
-      : mode === PlayMode.LOOP
-      ? 'icon-loop'
-      : 'icon-random'
+    const tmp = {
+      '0': 'icon-sequence',
+      '1': 'icon-loop',
+      '2': 'icon-random',
+    }
+    return tmp[mode]
   })
   /**
    * 判断当前歌曲是否在收藏列表中
    */
-  const class_favorite = (song: Song) => {
-    const isFavorite = unref(favoriteList).findIndex(item => item.id === song.id) > -1
+  const classFavorite = (song: Song) => {
+    const isFavorite = unref(favoriteList).findIndex((item) => item.id === song.id) > -1
     return isFavorite ? 'icon-favorite' : 'icon-not-favorite'
   }
 
@@ -159,10 +162,10 @@ function usePlayer(audioRef: Ref<HTMLAudioElement | undefined>, currentSongReady
     handleAudioPause,
     handleAudioTimeUpdate,
     handleAudioEnded,
-    class_disabled,
-    class_modeIcon,
-    class_playIcon,
-    class_favorite
+    classDisabled,
+    classModeIcon,
+    classPlayIcon,
+    classFavorite,
   }
 }
 

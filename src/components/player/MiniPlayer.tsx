@@ -1,26 +1,13 @@
+import { computed, defineComponent, ref, Transition, unref, watch } from 'vue'
 import useMiniSlider from '@/hooks/useMiniSlider'
 import { usePlayerStore } from '@/store'
-import {
-  computed,
-  defineComponent,
-  PropType,
-  ref,
-  Transition,
-  unref,
-  watch,
-} from 'vue'
 import { useCD } from './hooks'
 import style from './MiniPlayer.module.scss'
 import PlayList from './PlayList'
 
 const MiniPlayer = defineComponent({
   name: 'MiniPlayer',
-  props: {
-    name: {
-      type: String as PropType<string>,
-    },
-  },
-  setup: (props, context) => {
+  setup: () => {
     const playerStore = usePlayerStore()
     const currentSong = computed(() => playerStore.currentSong)
     const fullScreen = computed(() => playerStore.fullScreen)
@@ -32,13 +19,13 @@ const MiniPlayer = defineComponent({
 
     const { slideWrapperRef } = useMiniSlider()
 
-    watch(playing, (val, old) => {
+    watch(playing, (val) => {
       if (!val && !unref(fullScreen)) {
         calcCdWrapperTransform(cdWrapperRef, cdImageRef)
       }
     })
 
-    const handleMiniPlayerClick = (e: MouseEvent) => {
+    const handleMiniPlayerClick = () => {
       playerStore.setFullScreen(true)
     }
     const handlePlayPauseIconClick = (e: MouseEvent) => {

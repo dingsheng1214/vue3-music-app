@@ -1,12 +1,11 @@
 import BScroll from '@better-scroll/core'
 import Slide from '@better-scroll/slide'
 
-import { onMounted, onUnmounted, onActivated, onDeactivated, ref, Ref } from 'vue'
+import { onMounted, onUnmounted, onActivated, onDeactivated, ref } from 'vue'
 
 BScroll.use(Slide)
 
 export default function useSlider() {
-
   const slideWrapperRef = ref<HTMLElement | string>()
   const slider = ref<BScroll>()
   const currentPageIndex = ref(0)
@@ -43,6 +42,6 @@ export default function useSlider() {
   return {
     slider,
     currentPageIndex,
-    slideWrapperRef
+    slideWrapperRef,
   }
 }

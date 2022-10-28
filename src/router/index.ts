@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import TopDetail from '@/views/tabs/TopDetail'
 
 const Recommend = () => import('@/views/tabs/Recommend')
 const Singer = () => import('@/views/tabs/Singer')
@@ -7,7 +8,6 @@ const Search = () => import('@/views/tabs/Search')
 
 const SingerDetail = () => import('@/views/tabs/SingerDetail')
 const Album = () => import('@/views/tabs/Album')
-import TopDetail from '@/views/tabs/TopDetail'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,9 +20,9 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: ':id',
-        component: Album
-      }
-    ]
+        component: Album,
+      },
+    ],
   },
   {
     path: '/singer',

@@ -1,17 +1,30 @@
-import { PlayMode, Song } from '#/global';
-import { usePlayerStore } from '@/store';
-import { computed, defineComponent, nextTick, onMounted, PropType, ref, Teleport, Transition, TransitionGroup, unref, watch } from 'vue';
-import Scroll from '@/components/base/Scroll';
-import style from './PlayList.module.scss';
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  PropType,
+  ref,
+  Teleport,
+  Transition,
+  TransitionGroup,
+  unref,
+  watch,
+} from 'vue'
+import { PlayMode, Song } from '#/global'
+import { usePlayerStore } from '@/store'
+import Scroll from '@/components/base/Scroll'
+import style from './PlayList.module.scss'
+
 const PlayList = defineComponent({
   name: 'PlayList',
-  props: {
-    name: {
-      type: String as PropType<string>
-    }
-  },
+  props: {
+    name: {
+      type: String as PropType<string>,
+    },
+  },
   emits: ['close'],
-  setup: (props, { emit }) => {
+  setup: (props, { emit }) => {
     const scrollRef = ref()
     const listRef = ref()
     const playerStore = usePlayerStore()
@@ -20,34 +33,37 @@ const PlayList = defineComponent({
     const favoriteList = computed(() => playerStore.favoriteList)
     const playMode = computed(() => playerStore.playMode)
     const currentSong = computed(() => playerStore.currentSong)
-    const playModeObj = ref({mode: PlayMode.SEQUENCE, txt: '顺序播放', icon: 'icon-sequence'})
+    const playModeObj = ref({ mode: PlayMode.SEQUENCE, txt: '顺序播放', icon: 'icon-sequence' })
 
     watch(playMode, (mode) => {
-      console.log('PlayMode changed', mode);
-
-      if(mode === PlayMode.SEQUENCE) {
-        playModeObj.value = {mode, txt: '顺序播放', icon: 'icon-sequence'}
-      } else if(mode === PlayMode.LOOP) {
-        playModeObj.value = {mode, txt: '循环播放', icon: 'icon-loop'}
+      if (mode === PlayMode.SEQUENCE) {
+        playModeObj.value = { mode, txt: '顺序播放', icon: 'icon-sequence' }
+      } else if (mode === PlayMode.LOOP) {
+        playModeObj.value = { mode, txt: '循环播放', icon: 'icon-loop' }
       } else {
-        playModeObj.value = {mode, txt: '随机播放', icon: 'icon-random'}
+        playModeObj.value = { mode, txt: '随机播放', icon: 'icon-random' }
       }
     })
 
-    watch(currentSong, async val => {
+    const scrollToCurrentSong = () => {
+      const index = unref(sequenceList).findIndex((item) => item.id === unref(currentSong).id)
+      const targetElement = unref(listRef).$el.children[index]
+      unref(scrollRef).scrollTo(targetElement, 300)
+    }
+
+    watch(currentSong, async () => {
       await nextTick()
       scrollToCurrentSong()
     })
 
     onMounted(() => {
-      console.log('playList onMounted');
-      if(unref(listRef) && unref(scrollRef)) {
+      if (unref(listRef) && unref(scrollRef)) {
         scrollToCurrentSong()
       }
     })
 
     const isFavorite = (song: Song) => {
-      return unref(favoriteList).findIndex(item => item.id === song.id) > -1
+      return unref(favoriteList).findIndex((item) => item.id === song.id) > -1
     }
     const isCurrentSong = (song: Song) => {
       return song.id === unref(currentSong).id
@@ -56,25 +72,20 @@ const PlayList = defineComponent({
       const mode = (unref(playModeObj).mode + 1) % 3
       playerStore.changeMode(mode)
     }
-    const deleteSong = (e: MouseEvent,song: Song) => {
+    const deleteSong = (e: MouseEvent, song: Song) => {
       e.stopPropagation()
       playerStore.removeSong(song)
       if (!playList.value.length) {
         emit('close')
       }
     }
-    const scrollToCurrentSong = () => {
-      const index = unref(sequenceList).findIndex(item => item.id === unref(currentSong).id)
-      const targetElement = unref(listRef).$el.children[index]
-      unref(scrollRef).scrollTo(targetElement, 300)
-    }
 
     const changeCurrentSong = (song: Song) => {
-      const index = unref(sequenceList).findIndex(item => item.id === song.id)
+      const index = unref(sequenceList).findIndex((item) => item.id === song.id)
       playerStore.setCurrentIndex(index)
     }
-    return () => (
-      <Teleport to='body'>
+    return () => (
+      <Teleport to="body">
         <Transition
           enterFromClass={style['list-fade-enter-from']}
           enterActiveClass={style['list-fade-enter-active']}
@@ -82,31 +93,28 @@ const PlayList = defineComponent({
           leaveActiveClass={style['list-fade-leave-active']}
         >
           <div class={style.playList} onClick={() => emit('close')}>
-            <div class={style['list-wrapper']} onClick={e => e.stopPropagation()}>
+            <div class={style['list-wrapper']} onClick={(e) => e.stopPropagation()}>
               <div class={style['list-header']}>
                 <h2 class={style.title}>
-                  <i class={[unref(playModeObj).icon, style.icon]} onClick={changeMode}/>
+                  <i class={[unref(playModeObj).icon, style.icon]} onClick={changeMode} />
                   <span class={style['play-mode-text']}>{unref(playModeObj).txt}</span>
                   {/* <i class={[style['clear-icon'], 'icon-clear']}></i> */}
                 </h2>
               </div>
 
               <Scroll class={style['list-content']} ref={scrollRef}>
-                <TransitionGroup ref={listRef} tag='ul' name='list'>
-                  {
-                    unref(sequenceList).map(item => (
-                      <li class={style.item} key={item.id} onClick={() => changeCurrentSong(item)}>
-                        <div>
-                          {
-                            isCurrentSong(item) && <i class={['icon-play']} />
-                          }
-                        </div>
-                        <span>{item.name}</span>
-                        <i class={[isFavorite(item) ? 'icon-favorite' : 'icon-not-favorite']} onClick={() => playerStore.toggleFavorite(item)}/>
-                        <i class={['icon-delete']} onClick={(e) => deleteSong(e, item)} />
-                      </li>
-                    ))
-                  }
+                <TransitionGroup ref={listRef} tag="ul" name="list">
+                  {unref(sequenceList).map((item) => (
+                    <li class={style.item} key={item.id} onClick={() => changeCurrentSong(item)}>
+                      <div>{isCurrentSong(item) && <i class={['icon-play']} />}</div>
+                      <span>{item.name}</span>
+                      <i
+                        class={[isFavorite(item) ? 'icon-favorite' : 'icon-not-favorite']}
+                        onClick={() => playerStore.toggleFavorite(item)}
+                      />
+                      <i class={['icon-delete']} onClick={(e) => deleteSong(e, item)} />
+                    </li>
+                  ))}
                 </TransitionGroup>
               </Scroll>
 
@@ -124,7 +132,7 @@ const PlayList = defineComponent({
           </div>
         </Transition>
       </Teleport>
-    )
-  }
+    )
+  },
 })
 export default PlayList

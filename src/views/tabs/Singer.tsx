@@ -1,9 +1,9 @@
 import { computed, defineComponent, nextTick, onMounted, Ref, ref, unref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { getSingerList } from '@/api/singer'
 import Scroll from '@/components/base/Scroll'
 import { Singer as SingerType } from '#/global'
 import style from './Singer.module.scss'
-import { useRouter } from 'vue-router'
 import storage from '@/assets/js/storage/session'
 import { SINGER_KEY } from '@/assets/js/constant'
 import { SongListRouterView } from './SongList'
@@ -32,12 +32,11 @@ function useFixed(singers: Ref<Singers>, singersRef: Ref) {
 
   // 回调函数，从BetterScroll 中获取实时的 下拉值
   function onScroll(pos: { x: number; y: number }) {
-    // console.log('scroll', pos);
     scrollY.value = -pos.y
   }
 
   // 监听列表 更新listHeights
-  watch(singers, async (val, old) => {
+  watch(singers, async () => {
     // 数据发生变化后，回调函数内部dom还是没有发生变化，
     // nextTick: 等待下一次DOM更新刷新的工具方法
     await nextTick()
@@ -49,8 +48,6 @@ function useFixed(singers: Ref<Singers>, singersRef: Ref) {
     const index = unref(listHeights).findIndex((item) => item > val)
     if (index >= 1) {
       // 下拉
-      // console.log('顶点下', val, `落在下标 ${index - 1} ~ ${index}之间`);
-      // console.log('距离顶部：', unref(listHeights)[index] - val);
       distanceToTop.value = unref(listHeights)[index] - val
       fixedTitle.value = unref(singers)[index - 1].title
       fixedIndex.value = index - 1
@@ -60,7 +57,6 @@ function useFixed(singers: Ref<Singers>, singersRef: Ref) {
       fixedTranslateY.value = diff
     } else {
       // 上滑
-      // console.log('顶点上...');
       fixedTitle.value = ''
       fixedIndex.value = 0
     }
@@ -78,7 +74,7 @@ function useShortcut(singers: Ref<Singers>, scrollRef: Ref, singersRef: Ref) {
     e.preventDefault()
     e.stopPropagation()
     const element = e.target as HTMLElement
-    const anchorIndex = parseInt(element.dataset.index!)
+    const anchorIndex = parseInt(element.dataset.index!, 10)
     scrollTo(anchorIndex)
 
     oneTouch.y1 = e.touches[0].pageY!
@@ -120,7 +116,6 @@ const Singer = defineComponent({
 
     const router = useRouter()
     const handleSingerSelect = (singer: SingerType) => {
-      console.log('toSingerDetail', singer)
       router.push({
         path: `/singer/${singer.mid}`,
       })
