@@ -1,0 +1,32 @@
+.top-list {
+  padding: 20px;
+  height: calc(100vh - 88px);
+  box-sizing: border-box;
+  .top-list-content {
+    height: 100%;
+    overflow: hidden;
+  }
+  .item {
+    display: flex;
+    margin-bottom: 20px;
+    .icon {
+      width: 100px;
+      height: 100px;
+    }
+    .songs {
+      flex: 1;
+      height: 100px;
+      background-color: $color-highlight-background;
+      color: $color-text-d;
+      font-size: $font-size-medium;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      .song {
+        @include no-wrap()
+      }
+    }
+  }
+}
+

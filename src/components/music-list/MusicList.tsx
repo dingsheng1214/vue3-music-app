@@ -4,6 +4,7 @@ import Scroll from '../base/Scroll';
 import style from './MusicList.module.scss';
 import SongList from '@/components/song-list/SongList';
 import { usePlayerStore } from '@/store';
+import { useRouter } from 'vue-router';
 const MusicList = defineComponent({
   name: 'MusicList',
   props: {
@@ -18,6 +19,7 @@ const MusicList = defineComponent({
     }
   },
   setup: (props, context) => {
+    const router = useRouter()
     const scrollY = ref<number>(0)
     const maxScrollY = ref<number>(0)
     const bgImageRef = ref()
@@ -89,9 +91,12 @@ const MusicList = defineComponent({
     const onRandomPlay = () => {
       randomPlay(props.songs!)
     }
+    const goBack = () => {
+      router.go(-1)
+    }
     return () => (
       <div class={style['music-list']}>
-        <div class={style.back}>
+        <div class={style.back} onClick={goBack}>
           <i class={['icon-back', style['back-icon']].join(' ')}></i>
         </div>
         <h1 class={style.title}>{props.title}</h1>

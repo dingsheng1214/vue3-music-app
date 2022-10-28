@@ -47,3 +47,15 @@ export const enum PlayMode {
   LOOP = 1,
   RANDOM = 2
 }
+
+/**
+ * 排行榜单项
+ */
+export type TopItem = {
+  id: number
+  name: string
+  period: string
+  pic: string
+  songList: {id: number, singerName: string, songName: string}[]
+}
+
