@@ -10,7 +10,7 @@ const app = express()
 app.use(cookieParser())
 
 app.get('/', function (req, res, next) {
-  res.cookie('XSRF-TOKEN', req.csrfToken())
+//  res.cookie('XSRF-TOKEN', req.csrfToken())
   return next()
 })
 
