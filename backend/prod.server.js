@@ -1,7 +1,7 @@
-const express = require('express')
-const compression = require('compression')
-const cookieParser = require('cookie-parser')
-const registerRouter = require('./router.cjs')
+import express from 'express'
+import compression from 'compression'
+import cookieParser from 'cookie-parser'
+import registerRouter from './router.js'
 
 const port = process.env.PORT || 9002
 
@@ -26,7 +26,7 @@ app.use(express.static('./dist'))
 //   }
 // })
 
-module.exports = app.listen(port, function (err) {
+export default app.listen(port, function (err) {
   if (err) {
     console.log(err)
     return
